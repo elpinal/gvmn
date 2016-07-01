@@ -5,10 +5,14 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 	"text/template"
+
+	"github.com/mitchellh/go-homedir"
 )
 
 // A Command is an implementation of a gvmn command
@@ -56,6 +60,9 @@ var commands = []*Command{
 	cmdUninstall,
 }
 
+var RepoURL = "git://github.com/golang/go.git"
+var GvmnDir string
+
 func main() {
 
 	flag.Usage = usage
@@ -70,6 +77,50 @@ func main() {
 	if args[0] == "help" {
 		help(args[1:])
 		return
+	}
+
+	home, err := homedir.Dir()
+	GvmnDir = filepath.Join(home, ".gvmn")
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+
+	if _, err := os.Stat(GvmnDir); err != nil {
+		if err := os.MkdirAll(GvmnDir, 0777); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+	}
+	etcDir := filepath.Join(GvmnDir, "etc")
+	if _, err := os.Stat(etcDir); err != nil {
+		if err := os.Mkdir(etcDir, 0777); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+	}
+	loginFile := filepath.Join(GvmnDir, "etc", "login")
+	if _, err := os.Stat(loginFile); err != nil {
+		err := ioutil.WriteFile(loginFile, []byte(strings.TrimSpace(`
+#!/bin/bash
+
+__gvmn_configure_path()
+{
+  local gvmn_bin_path="$HOME/.gvmn/versions/current/bin"
+
+  echo "$PATH" | grep -Fqv "$gvmn_bin_path" &&
+    PATH="$gvmn_bin_path:$PATH"
+}
+
+
+__gvmn_configure_path
+
+# __END__
+		`)), 0666)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
 	}
 
 	for _, cmd := range commands {
