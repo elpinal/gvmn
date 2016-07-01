@@ -138,7 +138,7 @@ __gvmn_configure_path
 	os.Exit(2)
 }
 
-var usageTemplate = `gvmn is a tool for 
+var usageTemplate = `gvmn is a tool for managing Go versions.
 
 Usage:
 
