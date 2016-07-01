@@ -29,7 +29,7 @@ func init() {
 // runInstall executes install command and return exit code.
 func runInstall(args []string) int {
 	if len(args) == 0 {
-		fmt.Fprintln(os.Stderr, "gvmn install: no go version specified")
+		fmt.Fprintln(os.Stderr, "gvmn install: no Go version specified")
 		return 1
 	}
 	dir := filepath.Join(GvmnDir, "repo")
