@@ -53,8 +53,6 @@ func TestCmdInstall(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping in short mode")
 	}
-	t.Log("GvmnDir for test:", GvmnDir)
-	t.Log("RepoURL for test:", RepoURL)
 	if got := runInstall([]string{"go1.7"}); got != 0 {
 		t.Fatalf("got %v, want 0", got)
 	}
