@@ -59,6 +59,27 @@ func build(version string) *doubleError {
 	return nil
 }
 
+func writeVersion(version string) *doubleError {
+	var ver string
+	if strings.HasPrefix(version, "go") {
+		ver = version
+	} else {
+		cmd := exec.Command("git", "log", "-n", "1", "--format=format: +%h %cd", version)
+		cmd.Dir = filepath.Join(GvmnDir, "repo")
+		var stderr bytes.Buffer
+		cmd.Stderr = &stderr
+		tag, err := cmd.Output()
+		if err != nil {
+			return &doubleError{err, fmt.Errorf(stderr.String())}
+		}
+		ver = "devel" + strings.TrimSpace(string(tag))
+	}
+	if err := ioutil.WriteFile(filepath.Join(GvmnDir, "versions", version, "VERSION"), []byte(ver), 0666); err != nil {
+		return &doubleError{errors.Wrap(err, "failed to write the version to VERSION"), nil}
+	}
+	return nil
+}
+
 func checkout(version string) *doubleError {
 	cmd := exec.Command("git", "archive", "--prefix="+version+"/", version)
 	cmd.Dir = filepath.Join(GvmnDir, "repo")
@@ -118,21 +139,8 @@ func install(version string) int {
 		return 1
 	}
 
-	var ver string
-	if strings.HasPrefix(version, "go") {
-		ver = version
-	} else {
-		cmd := exec.Command("git", "log", "-n", "1", "--format=format: +%h %cd", version)
-		cmd.Dir = filepath.Join(GvmnDir, "repo")
-		tag, err := cmd.Output()
-		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			return 1
-		}
-		ver = "devel" + strings.TrimSpace(string(tag))
-	}
-	if err := ioutil.WriteFile(filepath.Join(GvmnDir, "versions", version, "VERSION"), []byte(ver), 0666); err != nil {
-		fmt.Fprintln(os.Stderr, errors.Wrap(err, "failed to write the version to VERSION"))
+	if err := writeVersion(version); err != nil {
+		fmt.Fprint(os.Stderr, err)
 		return 1
 	}
 
