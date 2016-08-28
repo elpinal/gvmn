@@ -43,6 +43,22 @@ func (e *doubleError) Error() string {
 	return fmt.Sprintf("%v\n%v", e.a, e.b)
 }
 
+func build(version string) *doubleError {
+	var env []string
+	if goroot, err := exec.Command("go", "env", "GOROOT").Output(); err == nil {
+		env = append(os.Environ(), "GOROOT_BOOTSTRAP="+string(bytes.TrimSuffix(goroot, []byte("\n"))))
+	}
+	cmd := exec.Command("./make.bash")
+	cmd.Dir = filepath.Join(GvmnDir, "versions", version, "src")
+	cmd.Env = env
+	var buf bytes.Buffer
+	cmd.Stderr = &buf
+	if err := cmd.Run(); err != nil {
+		return &doubleError{errors.Wrap(err, "./make.bash failed"), fmt.Errorf(buf.String())}
+	}
+	return nil
+}
+
 func checkout(version string) *doubleError {
 	cmd := exec.Command("git", "archive", "--prefix="+version+"/", version)
 	cmd.Dir = filepath.Join(GvmnDir, "repo")
@@ -102,11 +118,6 @@ func install(version string) int {
 		return 1
 	}
 
-	var env []string
-	if goroot, err := exec.Command("go", "env", "GOROOT").Output(); err == nil {
-		env = append(os.Environ(), "GOROOT_BOOTSTRAP="+string(bytes.TrimSuffix(goroot, []byte("\n"))))
-	}
-
 	var ver string
 	if strings.HasPrefix(version, "go") {
 		ver = version
@@ -125,14 +136,8 @@ func install(version string) int {
 		return 1
 	}
 
-	cmd := exec.Command("./make.bash")
-	cmd.Dir = filepath.Join(GvmnDir, "versions", version, "src")
-	cmd.Env = env
-	var buf bytes.Buffer
-	cmd.Stderr = &buf
-	if err := cmd.Run(); err != nil {
-		fmt.Fprintln(os.Stderr, errors.Wrap(err, "./make.bash failed"))
-		fmt.Fprintln(os.Stderr, buf.String())
+	if err := build(version); err != nil {
+		fmt.Fprint(os.Stderr, err)
 		return 1
 	}
 	return 0
