@@ -1,2 +1,3 @@
 *.test
 /gvmn
+/testdata/go

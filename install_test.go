@@ -2,8 +2,10 @@ package main
 
 import (
 	"bytes"
+	"flag"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -18,12 +20,28 @@ func mustRemoveAll(dir string) {
 }
 
 func TestMain(m *testing.M) {
+	flag.Parse()
+
 	var err error
 	GvmnDir, err = ioutil.TempDir("", "")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "TempDir: %v", err)
 		os.Exit(2)
 	}
+
+	if !exist("testdata/go") {
+		if testing.Verbose() {
+			log.SetFlags(log.Lshortfile)
+			log.Println("fetching for test...")
+		}
+		out, err := exec.Command("git", "clone", "--depth=1", "--bare", "--branch=go1.7", RepoURL, "testdata/go").CombinedOutput()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "failed to fetch for test: %v\n", err)
+			fmt.Fprintln(os.Stderr, string(out))
+			os.Exit(2)
+		}
+	}
+	RepoURL = "testdata/go"
 
 	r := m.Run()
 
@@ -33,6 +51,7 @@ func TestMain(m *testing.M) {
 
 func TestCmdInstall(t *testing.T) {
 	t.Log("GvmnDir for test:", GvmnDir)
+	t.Log("RepoURL for test:", RepoURL)
 	if testing.Short() {
 		t.Skip("skipping in short mode")
 	}
