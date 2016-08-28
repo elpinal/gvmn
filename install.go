@@ -26,31 +26,6 @@ func init() {
 	// cmdInstall.Flag.BoolVar(&flagA, "a", false, "")
 }
 
-// runInstall executes install command and return exit code.
-func runInstall(args []string) int {
-	if len(args) == 0 {
-		fmt.Fprintln(os.Stderr, "gvmn install: no Go version specified")
-		return 1
-	}
-	dir := filepath.Join(GvmnDir, "repo")
-	if !exist(dir) {
-		out, err := exec.Command("git", "clone", "--bare", RepoURL, dir).CombinedOutput()
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "cloning repository failed: %v\n%s", err, out)
-			return 1
-		}
-	}
-
-	cmd := exec.Command("git", "fetch", "--tags")
-	cmd.Dir = dir
-	if err := cmd.Run(); err != nil {
-		fmt.Fprintln(os.Stderr, errors.Wrap(err, "failed to fetch"))
-		return 1
-	}
-
-	return install(args[0])
-}
-
 type doubleError struct {
 	a, b error
 }
@@ -91,6 +66,25 @@ func checkout(version string) *doubleError {
 		return &doubleError{errors.Wrap(err, "tar failed"), fmt.Errorf("%v", stdout)}
 	}
 	return nil
+}
+
+func latestTag() (string, error) {
+	cmd := exec.Command("git", "rev-list", "--tags", "--max-count=1")
+	cmd.Dir = filepath.Join(GvmnDir, "repo")
+	out, err := cmd.Output()
+	if err != nil {
+		return "", errors.Wrap(err, "git rev-list failed")
+	}
+	sha := string(bytes.TrimSuffix(out, []byte("\n")))
+	cmd = exec.Command("git", "describe", "--tags", sha)
+	cmd.Dir = filepath.Join(GvmnDir, "repo")
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+	tag, err := cmd.Output()
+	if err != nil {
+		return "", errors.Wrap(err, stderr.String())
+	}
+	return string(bytes.TrimSuffix(tag, []byte("\n"))), nil
 }
 
 func install(version string) int {
@@ -144,21 +138,27 @@ func install(version string) int {
 	return 0
 }
 
-func latestTag() (string, error) {
-	cmd := exec.Command("git", "rev-list", "--tags", "--max-count=1")
-	cmd.Dir = filepath.Join(GvmnDir, "repo")
-	out, err := cmd.Output()
-	if err != nil {
-		return "", errors.Wrap(err, "git rev-list failed")
+// runInstall executes install command and return exit code.
+func runInstall(args []string) int {
+	if len(args) == 0 {
+		fmt.Fprintln(os.Stderr, "gvmn install: no Go version specified")
+		return 1
 	}
-	sha := string(bytes.TrimSuffix(out, []byte("\n")))
-	cmd = exec.Command("git", "describe", "--tags", sha)
-	cmd.Dir = filepath.Join(GvmnDir, "repo")
-	var stderr bytes.Buffer
-	cmd.Stderr = &stderr
-	tag, err := cmd.Output()
-	if err != nil {
-		return "", errors.Wrap(err, stderr.String())
+	dir := filepath.Join(GvmnDir, "repo")
+	if !exist(dir) {
+		out, err := exec.Command("git", "clone", "--bare", RepoURL, dir).CombinedOutput()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "cloning repository failed: %v\n%s", err, out)
+			return 1
+		}
 	}
-	return string(bytes.TrimSuffix(tag, []byte("\n"))), nil
+
+	cmd := exec.Command("git", "fetch", "--tags")
+	cmd.Dir = dir
+	if err := cmd.Run(); err != nil {
+		fmt.Fprintln(os.Stderr, errors.Wrap(err, "failed to fetch"))
+		return 1
+	}
+
+	return install(args[0])
 }
