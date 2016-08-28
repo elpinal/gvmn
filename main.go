@@ -46,8 +46,8 @@ func (c *Command) Name() string {
 }
 
 func (c *Command) Usage() {
-	fmt.Fprintf(os.Stderr, "usage: %s\n\n", c.UsageLine)
-	fmt.Fprintf(os.Stderr, "%s\n", strings.TrimSpace(c.Long))
+	log.Printf(os.Stderr, "usage: %s\n\n", c.UsageLine)
+	log.Printf(os.Stderr, "%s\n", strings.TrimSpace(c.Long))
 	os.Exit(2)
 }
 
@@ -85,21 +85,21 @@ func main() {
 
 	home, err := homedir.Dir()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		log.Print(err)
 		os.Exit(1)
 	}
 	GvmnDir = filepath.Join(home, ".gvmn")
 
 	if !exist(GvmnDir) {
 		if err := os.MkdirAll(GvmnDir, 0777); err != nil {
-			fmt.Fprintln(os.Stderr, err)
+			log.Print(err)
 			os.Exit(1)
 		}
 	}
 	etcDir := filepath.Join(GvmnDir, "etc")
 	if !exist(etcDir) {
 		if err := os.Mkdir(etcDir, 0777); err != nil {
-			fmt.Fprintln(os.Stderr, err)
+			log.Print(err)
 			os.Exit(1)
 		}
 	}
@@ -122,7 +122,7 @@ __gvmn_configure_path
 # __END__
 		`)), 0666)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
+			log.Print(err)
 			os.Exit(1)
 		}
 	}
@@ -138,7 +138,7 @@ __gvmn_configure_path
 		}
 	}
 
-	fmt.Fprintf(os.Stderr, "gvmn: unknown subcommand %q\nRun 'gvmn help' for usage.\n", args[0])
+	fmt.Printf("gvmn: unknown subcommand %q\nRun 'gvmn help' for usage.\n", args[0])
 	os.Exit(2)
 }
 
@@ -190,7 +190,7 @@ func help(args []string) {
 		return
 	}
 	if len(args) != 1 {
-		fmt.Fprintf(os.Stderr, "usage: gvmn help command\n\nToo many arguments given.\n")
+		fmt.Printf(os.Stderr, "usage: gvmn help command\n\nToo many arguments given.\n")
 		os.Exit(2) // failed at 'gvmn help'
 	}
 
@@ -204,6 +204,6 @@ func help(args []string) {
 		}
 	}
 
-	fmt.Fprintf(os.Stderr, "Unknown help topic %#q.  Run 'gvmn help'.\n", arg)
+	fmt.Printf(os.Stderr, "Unknown help topic %#q.  Run 'gvmn help'.\n", arg)
 	os.Exit(2) // failed at 'gvmn help cmd'
 }

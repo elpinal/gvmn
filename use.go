@@ -25,25 +25,25 @@ func init() {
 // runUse executes use command and return exit code.
 func runUse(args []string) int {
 	if len(args) == 0 {
-		fmt.Fprintln(os.Stderr, "gvmn use: no Go version specified")
+		log.Print("gvmn use: no Go version specified")
 		return 1
 	}
 	currentDir := filepath.Join(GvmnDir, "versions", "current")
 	version := args[0]
 	versionsDir := filepath.Join(GvmnDir, "versions", version)
 	if !exist(versionsDir) {
-		fmt.Fprintln(os.Stderr, "no installed version of Go specified")
+		log.Print("no installed version of Go specified")
 		return 1
 	}
 	if exist(currentDir) {
 		if err := os.RemoveAll(currentDir); err != nil {
-			fmt.Fprintln(os.Stderr, errors.Wrap(err, "failed to unuse former version of Go"))
+			log.Print(errors.Wrap(err, "failed to unuse former version of Go"))
 			return 1
 		}
 	}
 	err := os.Symlink(versionsDir, currentDir)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, errors.Wrap(err, "failed to create symbolic link"))
+		log.Print(errors.Wrap(err, "failed to create symbolic link"))
 		return 1
 	}
 

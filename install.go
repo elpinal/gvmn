@@ -136,23 +136,23 @@ func install(version string) int {
 		var err error
 		version, err = latestTag()
 		if err != nil {
-			fmt.Fprintln(os.Stderr, errors.Wrap(err, "failed to get the latest version"))
+			log.Print(errors.Wrap(err, "failed to get the latest version"))
 			return 1
 		}
 	}
 
 	if err := checkout(version); err != nil {
-		fmt.Fprint(os.Stderr, err)
+		log.Print(err)
 		return 1
 	}
 
 	if err := writeVersion(version); err != nil {
-		fmt.Fprint(os.Stderr, err)
+		log.Print(err)
 		return 1
 	}
 
 	if err := build(version); err != nil {
-		fmt.Fprint(os.Stderr, err)
+		log.Print(err)
 		return 1
 	}
 	return 0
@@ -161,14 +161,14 @@ func install(version string) int {
 // runInstall executes install command and return exit code.
 func runInstall(args []string) int {
 	if len(args) == 0 {
-		fmt.Fprintln(os.Stderr, "gvmn install: no Go version specified")
+		log.Print("gvmn install: no Go version specified")
 		return 1
 	}
 	dir := filepath.Join(GvmnDir, "repo")
 	if !exist(dir) {
 		out, err := exec.Command("git", "clone", "--bare", RepoURL, dir).CombinedOutput()
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "cloning repository failed: %v\n%s", err, out)
+			log.Printf("cloning repository failed: %v\n%s", err, out)
 			return 1
 		}
 	}
@@ -176,7 +176,7 @@ func runInstall(args []string) int {
 	cmd := exec.Command("git", "fetch", "--tags")
 	cmd.Dir = dir
 	if err := cmd.Run(); err != nil {
-		fmt.Fprintln(os.Stderr, errors.Wrap(err, "failed to fetch"))
+		log.Print(errors.Wrap(err, "failed to fetch"))
 		return 1
 	}
 

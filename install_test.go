@@ -32,7 +32,7 @@ func TestMain(m *testing.M) {
 	if !exist("testdata/go") {
 		if testing.Verbose() {
 			log.SetFlags(log.Lshortfile)
-			log.Println("fetching for test...")
+			log.Print("fetching for test...")
 		}
 		out, err := exec.Command("git", "clone", "--depth=1", "--bare", "--branch=go1.7", RepoURL, "testdata/go").CombinedOutput()
 		if err != nil {

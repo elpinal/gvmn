@@ -29,7 +29,7 @@ func runList(args []string) int {
 	currentVersion := filepath.Base(current)
 	versions, err := ioutil.ReadDir(filepath.Join(GvmnDir, "versions"))
 	if err != nil {
-		fmt.Fprintln(os.Stderr, errors.Wrap(err, "failed to list versions of Go"))
+		log.Print(errors.Wrap(err, "failed to list versions of Go"))
 	}
 	for _, version := range versions {
 		ver := version.Name()
