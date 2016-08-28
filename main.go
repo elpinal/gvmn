@@ -84,11 +84,11 @@ func main() {
 	}
 
 	home, err := homedir.Dir()
-	GvmnDir = filepath.Join(home, ".gvmn")
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
+	GvmnDir = filepath.Join(home, ".gvmn")
 
 	if !exist(GvmnDir) {
 		if err := os.MkdirAll(GvmnDir, 0777); err != nil {
