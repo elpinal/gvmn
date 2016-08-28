@@ -132,31 +132,27 @@ func latestTag() (string, error) {
 }
 
 // install installs the specified version of Go.
-func install(version string) int {
+func install(version string) error {
 	if version == "latest" {
 		var err error
 		version, err = latestTag()
 		if err != nil {
-			log.Print(errors.Wrap(err, "failed to get the latest version"))
-			return 1
+			return errors.Wrap(err, "failed to get the latest version")
 		}
 	}
 
 	if err := checkout(version); err != nil {
-		log.Print(err)
-		return 1
+		return err
 	}
 
 	if err := writeVersion(version); err != nil {
-		log.Print(err)
-		return 1
+		return err
 	}
 
 	if err := build(version); err != nil {
-		log.Print(err)
-		return 1
+		return err
 	}
-	return 0
+	return nil
 }
 
 // runInstall executes install command and return exit code.
@@ -181,5 +177,9 @@ func runInstall(args []string) int {
 		return 1
 	}
 
-	return install(args[0])
+	if err := install(args[0]); err != nil {
+		log.Print(err)
+		return 1
+	}
+	return 0
 }
