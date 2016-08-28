@@ -26,6 +26,7 @@ func init() {
 	// cmdInstall.Flag.BoolVar(&flagA, "a", false, "")
 }
 
+// doubleError is a type which has two error.
 type doubleError struct {
 	a, b error
 }
@@ -43,6 +44,7 @@ func (e *doubleError) Error() string {
 	return fmt.Sprintf("%v\n%v", e.a, e.b)
 }
 
+// build builds the specified version of Go.
 func build(version string) *doubleError {
 	var env []string
 	if goroot, err := exec.Command("go", "env", "GOROOT").Output(); err == nil {
@@ -59,6 +61,8 @@ func build(version string) *doubleError {
 	return nil
 }
 
+// writeVersion writes the version to $GOROOT/VERSION
+// to enable Go to determine the version to use in the version string.
 func writeVersion(version string) *doubleError {
 	var ver string
 	if strings.HasPrefix(version, "go") {
@@ -80,6 +84,7 @@ func writeVersion(version string) *doubleError {
 	return nil
 }
 
+// checkout checkouts specified version of the Go repository.
 func checkout(version string) *doubleError {
 	cmd := exec.Command("git", "archive", "--prefix="+version+"/", version)
 	cmd.Dir = filepath.Join(GvmnDir, "repo")
@@ -105,6 +110,7 @@ func checkout(version string) *doubleError {
 	return nil
 }
 
+// latestTag reports the latest tag of the Go repository.
 func latestTag() (string, error) {
 	cmd := exec.Command("git", "rev-list", "--tags", "--max-count=1")
 	cmd.Dir = filepath.Join(GvmnDir, "repo")
@@ -124,6 +130,7 @@ func latestTag() (string, error) {
 	return string(bytes.TrimSuffix(tag, []byte("\n"))), nil
 }
 
+// install installs the specified version of Go.
 func install(version string) int {
 	if version == "latest" {
 		var err error
