@@ -31,11 +31,11 @@ func runUse(args []string) int {
 	currentDir := filepath.Join(GvmnDir, "versions", "current")
 	version := args[0]
 	versionsDir := filepath.Join(GvmnDir, "versions", version)
-	if _, err := os.Stat(versionsDir); err != nil {
-		fmt.Fprintln(os.Stderr, errors.Wrap(err, "no installed version of Go specified"))
+	if !exist(versionsDir) {
+		fmt.Fprintln(os.Stderr, "no installed version of Go specified")
 		return 1
 	}
-	if _, err := os.Stat(currentDir); err == nil {
+	if exist(currentDir) {
 		if err := os.RemoveAll(currentDir); err != nil {
 			fmt.Fprintln(os.Stderr, errors.Wrap(err, "failed unuse former version of Go"))
 			return 1

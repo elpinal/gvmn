@@ -33,7 +33,7 @@ func runInstall(args []string) int {
 		return 1
 	}
 	dir := filepath.Join(GvmnDir, "repo")
-	if _, err := os.Stat(dir); err != nil {
+	if !exist(dir) {
 		_, err := exec.Command("git", "clone", "--bare", RepoURL, dir).CombinedOutput()
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
@@ -48,7 +48,10 @@ func runInstall(args []string) int {
 		return 1
 	}
 
-	version := args[0]
+	return install(args[0])
+}
+
+func install(version string) int {
 	if version == "latest" {
 		var err error
 		version, err = latestTag()
@@ -57,8 +60,8 @@ func runInstall(args []string) int {
 			return 1
 		}
 	}
-	cmd = exec.Command("git", "archive", "--prefix="+version+"/", version)
-	cmd.Dir = dir
+	cmd := exec.Command("git", "archive", "--prefix="+version+"/", version)
+	cmd.Dir = filepath.Join(GvmnDir, "repo")
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
 	out, err := cmd.Output()
@@ -69,7 +72,7 @@ func runInstall(args []string) int {
 	}
 
 	versionsDir := filepath.Join(GvmnDir, "versions")
-	if _, err := os.Stat(versionsDir); err != nil {
+	if !exist(versionsDir) {
 		if err := os.MkdirAll(versionsDir, 0777); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			return 1

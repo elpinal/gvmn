@@ -63,8 +63,12 @@ var commands = []*Command{
 var RepoURL = "git://github.com/golang/go.git"
 var GvmnDir string
 
-func main() {
+func exist(path string) bool {
+	_, err := os.Stat(path)
+	return err == nil
+}
 
+func main() {
 	flag.Usage = usage
 	flag.Parse()
 	log.SetFlags(0)
@@ -86,21 +90,21 @@ func main() {
 		os.Exit(1)
 	}
 
-	if _, err := os.Stat(GvmnDir); err != nil {
+	if !exist(GvmnDir) {
 		if err := os.MkdirAll(GvmnDir, 0777); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 	}
 	etcDir := filepath.Join(GvmnDir, "etc")
-	if _, err := os.Stat(etcDir); err != nil {
+	if !exist(etcDir) {
 		if err := os.Mkdir(etcDir, 0777); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 	}
 	loginFile := filepath.Join(GvmnDir, "etc", "login")
-	if _, err := os.Stat(loginFile); err != nil {
+	if !exist(loginFile) {
 		err := ioutil.WriteFile(loginFile, []byte(strings.TrimSpace(`
 #!/bin/bash
 
