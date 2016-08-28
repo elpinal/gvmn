@@ -138,7 +138,7 @@ __gvmn_configure_path
 		}
 	}
 
-	fmt.Fprintf(os.Stderr, "gvmn: unknown subcommand %q\nRun ' gvmn help' for usage.\n", args[0])
+	fmt.Fprintf(os.Stderr, "gvmn: unknown subcommand %q\nRun 'gvmn help' for usage.\n", args[0])
 	os.Exit(2)
 }
 
