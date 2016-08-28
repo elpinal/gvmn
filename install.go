@@ -34,9 +34,9 @@ func runInstall(args []string) int {
 	}
 	dir := filepath.Join(GvmnDir, "repo")
 	if !exist(dir) {
-		_, err := exec.Command("git", "clone", "--bare", RepoURL, dir).CombinedOutput()
+		out, err := exec.Command("git", "clone", "--bare", RepoURL, dir).CombinedOutput()
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
+			fmt.Fprintf(os.Stderr, "cloning repository failed: %v\n%s", err, out)
 			return 1
 		}
 	}
