@@ -37,13 +37,13 @@ func runUse(args []string) int {
 	}
 	if exist(currentDir) {
 		if err := os.RemoveAll(currentDir); err != nil {
-			fmt.Fprintln(os.Stderr, errors.Wrap(err, "failed unuse former version of Go"))
+			fmt.Fprintln(os.Stderr, errors.Wrap(err, "failed to unuse former version of Go"))
 			return 1
 		}
 	}
 	err := os.Symlink(versionsDir, currentDir)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, errors.Wrap(err, "failed create symbolic link"))
+		fmt.Fprintln(os.Stderr, errors.Wrap(err, "failed to create symbolic link"))
 		return 1
 	}
 

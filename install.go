@@ -44,7 +44,7 @@ func runInstall(args []string) int {
 	cmd := exec.Command("git", "fetch", "--tags")
 	cmd.Dir = dir
 	if err := cmd.Run(); err != nil {
-		fmt.Fprintln(os.Stderr, errors.Wrap(err, "failed fetch"))
+		fmt.Fprintln(os.Stderr, errors.Wrap(err, "failed to fetch"))
 		return 1
 	}
 
@@ -56,7 +56,7 @@ func install(version string) int {
 		var err error
 		version, err = latestTag()
 		if err != nil {
-			fmt.Fprintln(os.Stderr, errors.Wrap(err, "failed get the latest version"))
+			fmt.Fprintln(os.Stderr, errors.Wrap(err, "failed to get the latest version"))
 			return 1
 		}
 	}
@@ -66,7 +66,7 @@ func install(version string) int {
 	cmd.Stderr = &stderr
 	out, err := cmd.Output()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, errors.Wrap(err, "failed git archive"))
+		fmt.Fprintln(os.Stderr, errors.Wrap(err, "git archive failed"))
 		fmt.Fprintln(os.Stderr, stderr.String())
 		return 1
 	}
@@ -82,7 +82,7 @@ func install(version string) int {
 	cmd.Dir = versionsDir
 	cmd.Stdin = bytes.NewReader(out)
 	if err := cmd.Run(); err != nil {
-		fmt.Fprintln(os.Stderr, errors.Wrap(err, "failed tar"))
+		fmt.Fprintln(os.Stderr, errors.Wrap(err, "tar failed"))
 		return 1
 	}
 
@@ -105,7 +105,7 @@ func install(version string) int {
 		ver = "devel" + strings.TrimSpace(string(tag))
 	}
 	if err := ioutil.WriteFile(filepath.Join(GvmnDir, "versions", version, "VERSION"), []byte(ver), 0666); err != nil {
-		fmt.Fprintln(os.Stderr, errors.Wrap(err, "failed write a version to VERSION"))
+		fmt.Fprintln(os.Stderr, errors.Wrap(err, "failed to write the version to VERSION"))
 		return 1
 	}
 
@@ -115,7 +115,7 @@ func install(version string) int {
 	var buf bytes.Buffer
 	cmd.Stderr = &buf
 	if err := cmd.Run(); err != nil {
-		fmt.Fprintln(os.Stderr, errors.Wrap(err, "failed install"))
+		fmt.Fprintln(os.Stderr, errors.Wrap(err, "./make.bash failed"))
 		fmt.Fprintln(os.Stderr, buf.String())
 		return 1
 	}
@@ -127,7 +127,7 @@ func latestTag() (string, error) {
 	cmd.Dir = filepath.Join(GvmnDir, "repo")
 	out, err := cmd.Output()
 	if err != nil {
-		return "", errors.Wrap(err, "failed git rev-list")
+		return "", errors.Wrap(err, "git rev-list failed")
 	}
 	sha := string(bytes.TrimSuffix(out, []byte("\n")))
 	cmd = exec.Command("git", "describe", "--tags", sha)
