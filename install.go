@@ -51,6 +51,48 @@ func runInstall(args []string) int {
 	return install(args[0])
 }
 
+type doubleError struct {
+	a, b error
+}
+
+func (e *doubleError) Error() string {
+	if e == nil {
+		return ""
+	}
+	if e.a == nil {
+		return e.b.Error()
+	}
+	if e.b == nil {
+		return e.a.Error()
+	}
+	return fmt.Sprintf("%v\n%v", e.a, e.b)
+}
+
+func checkout(version string) *doubleError {
+	cmd := exec.Command("git", "archive", "--prefix="+version+"/", version)
+	cmd.Dir = filepath.Join(GvmnDir, "repo")
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+	out, err := cmd.Output()
+	if err != nil {
+		return &doubleError{errors.Wrap(err, "git archive "+version+" failed"), fmt.Errorf(stderr.String())}
+	}
+
+	versionsDir := filepath.Join(GvmnDir, "versions")
+	if !exist(versionsDir) {
+		if err := os.MkdirAll(versionsDir, 0777); err != nil {
+			return &doubleError{err, nil}
+		}
+	}
+	cmd = exec.Command("tar", "xf", "-")
+	cmd.Dir = versionsDir
+	cmd.Stdin = bytes.NewReader(out)
+	if stdout, err := cmd.Output(); err != nil {
+		return &doubleError{errors.Wrap(err, "tar failed"), fmt.Errorf("%v", stdout)}
+	}
+	return nil
+}
+
 func install(version string) int {
 	if version == "latest" {
 		var err error
@@ -60,29 +102,9 @@ func install(version string) int {
 			return 1
 		}
 	}
-	cmd := exec.Command("git", "archive", "--prefix="+version+"/", version)
-	cmd.Dir = filepath.Join(GvmnDir, "repo")
-	var stderr bytes.Buffer
-	cmd.Stderr = &stderr
-	out, err := cmd.Output()
-	if err != nil {
-		fmt.Fprintln(os.Stderr, errors.Wrap(err, "git archive failed"))
-		fmt.Fprintln(os.Stderr, stderr.String())
-		return 1
-	}
 
-	versionsDir := filepath.Join(GvmnDir, "versions")
-	if !exist(versionsDir) {
-		if err := os.MkdirAll(versionsDir, 0777); err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			return 1
-		}
-	}
-	cmd = exec.Command("tar", "xf", "-")
-	cmd.Dir = versionsDir
-	cmd.Stdin = bytes.NewReader(out)
-	if err := cmd.Run(); err != nil {
-		fmt.Fprintln(os.Stderr, errors.Wrap(err, "tar failed"))
+	if err := checkout(version); err != nil {
+		fmt.Fprint(os.Stderr, err)
 		return 1
 	}
 
@@ -95,7 +117,7 @@ func install(version string) int {
 	if strings.HasPrefix(version, "go") {
 		ver = version
 	} else {
-		cmd = exec.Command("git", "log", "-n", "1", "--format=format: +%h %cd", version)
+		cmd := exec.Command("git", "log", "-n", "1", "--format=format: +%h %cd", version)
 		cmd.Dir = filepath.Join(GvmnDir, "repo")
 		tag, err := cmd.Output()
 		if err != nil {
@@ -109,8 +131,8 @@ func install(version string) int {
 		return 1
 	}
 
-	cmd = exec.Command("./make.bash")
-	cmd.Dir = filepath.Join(versionsDir, version, "src")
+	cmd := exec.Command("./make.bash")
+	cmd.Dir = filepath.Join(GvmnDir, "versions", version, "src")
 	cmd.Env = env
 	var buf bytes.Buffer
 	cmd.Stderr = &buf
