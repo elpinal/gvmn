@@ -162,16 +162,16 @@ func install(version string) error {
 }
 
 // download fetches repository from RepoURL.
-func download() *doubleError {
+func download(version string) *doubleError {
 	dir := filepath.Join(GvmnDir, "repo")
 	if !exist(dir) {
-		out, err := exec.Command("git", "clone", "--bare", RepoURL, dir).CombinedOutput()
+		out, err := exec.Command("git", "clone", "--mirror", "--depth=1", RepoURL, dir).CombinedOutput()
 		if err != nil {
 			return &doubleError{errors.Wrap(err, "cloning repository failed"), fmt.Errorf("%s", out)}
 		}
 	}
 
-	cmd := exec.Command("git", "fetch", "--tags")
+	cmd := exec.Command("git", "fetch", "--depth=1", "origin", version+":"+version)
 	cmd.Dir = dir
 	if err := cmd.Run(); err != nil {
 		return &doubleError{errors.Wrap(err, "failed to fetch"), nil}
@@ -186,7 +186,7 @@ func runInstall(args []string) int {
 		return 1
 	}
 
-	if err := download(); err != nil {
+	if err := download(args[0]); err != nil {
 		log.Print(err)
 		return 1
 	}
