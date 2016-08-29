@@ -65,3 +65,18 @@ func TestCmdInstall(t *testing.T) {
 		t.Fatalf("%v must contain 1.7", out)
 	}
 }
+
+func TestInstallUntilBuild(t *testing.T) {
+	if !testing.Short() {
+		t.Skip("skipping in non-short mode")
+	}
+	if err := download(); err != nil {
+		t.Fatalf("download() failed: %v", err)
+	}
+	if err := checkout("go1.7"); err != nil {
+		t.Fatalf(`checkout("go1.7") failed: %v`, err)
+	}
+	if err := writeVersion("go1.7"); err != nil {
+		t.Fatalf(`writeVersion("go1.7") failed: %v`, err)
+	}
+}

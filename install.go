@@ -155,25 +155,33 @@ func install(version string) error {
 	return nil
 }
 
-// runInstall executes install command and return exit code.
-func runInstall(args []string) int {
-	if len(args) == 0 {
-		log.Print("gvmn install: no Go version specified")
-		return 1
-	}
+// download fetches repository from RepoURL.
+func download() *doubleError {
 	dir := filepath.Join(GvmnDir, "repo")
 	if !exist(dir) {
 		out, err := exec.Command("git", "clone", "--bare", RepoURL, dir).CombinedOutput()
 		if err != nil {
-			log.Printf("cloning repository failed: %v\n%s", err, out)
-			return 1
+			return &doubleError{errors.Wrap(err, "cloning repository failed"), fmt.Errorf("%v", out)}
 		}
 	}
 
 	cmd := exec.Command("git", "fetch", "--tags")
 	cmd.Dir = dir
 	if err := cmd.Run(); err != nil {
-		log.Print(errors.Wrap(err, "failed to fetch"))
+		return &doubleError{errors.Wrap(err, "failed to fetch"), nil}
+	}
+	return nil
+}
+
+// runInstall executes install command and return exit code.
+func runInstall(args []string) int {
+	if len(args) == 0 {
+		log.Print("gvmn install: no Go version specified")
+		return 1
+	}
+
+	if err := download(); err != nil {
+		log.Print(err)
 		return 1
 	}
 
