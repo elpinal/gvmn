@@ -36,7 +36,7 @@ func runUse(args []string) int {
 		return 1
 	}
 	if err := os.RemoveAll(currentDir); err != nil {
-		log.Print(errors.Wrap(err, "failed to unuse former version of Go"))
+		log.Print(errors.Wrap(err, "failed to stop using former version of Go"))
 		return 1
 	}
 	err := os.Symlink(versionsDir, currentDir)
