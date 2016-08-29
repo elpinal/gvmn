@@ -86,21 +86,21 @@ func main() {
 	home, err := homedir.Dir()
 	if err != nil {
 		log.Print(err)
-		os.Exit(1)
+		os.Exit(2)
 	}
 	GvmnDir = filepath.Join(home, ".gvmn")
 
 	if !exist(GvmnDir) {
 		if err := os.MkdirAll(GvmnDir, 0777); err != nil {
 			log.Print(err)
-			os.Exit(1)
+			os.Exit(2)
 		}
 	}
 	etcDir := filepath.Join(GvmnDir, "etc")
 	if !exist(etcDir) {
 		if err := os.Mkdir(etcDir, 0777); err != nil {
 			log.Print(err)
-			os.Exit(1)
+			os.Exit(2)
 		}
 	}
 	loginFile := filepath.Join(GvmnDir, "etc", "login")
@@ -123,7 +123,7 @@ __gvmn_configure_path
 		`)), 0666)
 		if err != nil {
 			log.Print(err)
-			os.Exit(1)
+			os.Exit(2)
 		}
 	}
 
