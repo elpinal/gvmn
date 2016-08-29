@@ -97,7 +97,7 @@ func main() {
 			os.Exit(2)
 		}
 	}
-	loginFile := filepath.Join(GvmnDir, "etc", "login")
+	loginFile := filepath.Join(etcDir, "login")
 	if !exist(loginFile) {
 		err := ioutil.WriteFile(loginFile, []byte(strings.TrimSpace(`
 #!/bin/bash
