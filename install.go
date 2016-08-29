@@ -151,11 +151,7 @@ func install(version string) error {
 		}
 	}
 
-	if err := checkout(version); err != nil {
-		return err
-	}
-
-	if err := writeVersion(version); err != nil {
+	if err := checkout2(version); err != nil {
 		return err
 	}
 
