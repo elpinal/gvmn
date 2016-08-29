@@ -50,7 +50,7 @@ func build(version string) *doubleError {
 		env = append(os.Environ(), "GOROOT_BOOTSTRAP="+string(bytes.TrimSuffix(goroot, []byte("\n"))))
 	}
 	cmd := exec.Command("./make.bash")
-	cmd.Dir = filepath.Join(GvmnDir, "versions", version, "src")
+	cmd.Dir = filepath.Join(gvmnrootVersions, version, "src")
 	cmd.Env = env
 	var buf bytes.Buffer
 	cmd.Stderr = &buf
@@ -62,8 +62,8 @@ func build(version string) *doubleError {
 
 // checkout checkouts specified version of the Go repository.
 func checkout(version string) *doubleError {
-	versionsDir := filepath.Join(GvmnDir, "versions", version)
-	cmd := exec.Command("git", "clone", filepath.Join(GvmnDir, "repo"), versionsDir)
+	versionsDir := filepath.Join(gvmnrootVersions, version)
+	cmd := exec.Command("git", "clone", gvmnrootRepo, versionsDir)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		return &doubleError{errors.Wrap(err, "git clone failed"), fmt.Errorf("%s", out)}
@@ -81,14 +81,14 @@ func checkout(version string) *doubleError {
 // latestTag reports the latest tag of the Go repository.
 func latestTag() (string, error) {
 	cmd := exec.Command("git", "rev-list", "--tags", "--max-count=1")
-	cmd.Dir = filepath.Join(GvmnDir, "repo")
+	cmd.Dir = gvmnrootRepo
 	out, err := cmd.Output()
 	if err != nil {
 		return "", errors.Wrap(err, "git rev-list failed")
 	}
 	sha := string(bytes.TrimSuffix(out, []byte("\n")))
 	cmd = exec.Command("git", "describe", "--tags", sha)
-	cmd.Dir = filepath.Join(GvmnDir, "repo")
+	cmd.Dir = gvmnrootRepo
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
 	tag, err := cmd.Output()
@@ -120,7 +120,7 @@ func install(version string) error {
 
 // download fetches repository from RepoURL.
 func download() *doubleError {
-	dir := filepath.Join(GvmnDir, "repo")
+	dir := gvmnrootRepo
 	if !exist(dir) {
 		out, err := exec.Command("git", "clone", "--mirror", RepoURL, dir).CombinedOutput()
 		if err != nil {

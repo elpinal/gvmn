@@ -61,7 +61,20 @@ var commands = []*Command{
 }
 
 var RepoURL = "git://github.com/golang/go.git"
-var GvmnDir string
+
+var (
+	gvmnroot         string
+	gvmnrootEtc      string
+	gvmnrootRepo     string
+	gvmnrootVersions string
+)
+
+func setGvmnroot(root string) {
+	gvmnroot = root
+	gvmnrootEtc = filepath.Join(root, "etc")
+	gvmnrootRepo = filepath.Join(root, "repo")
+	gvmnrootVersions = filepath.Join(root, "versions")
+}
 
 func exist(path string) bool {
 	_, err := os.Stat(path)
@@ -88,16 +101,15 @@ func main() {
 		log.Print(err)
 		os.Exit(2)
 	}
-	GvmnDir = filepath.Join(home, ".gvmn")
+	setGvmnroot(filepath.Join(home, ".gvmn"))
 
-	etcDir := filepath.Join(GvmnDir, "etc")
-	if !exist(etcDir) {
-		if err := os.MkdirAll(etcDir, 0777); err != nil {
+	if !exist(gvmnrootEtc) {
+		if err := os.MkdirAll(gvmnrootEtc, 0777); err != nil {
 			log.Print(err)
 			os.Exit(2)
 		}
 	}
-	loginFile := filepath.Join(etcDir, "login")
+	loginFile := filepath.Join(gvmnrootEtc, "login")
 	if !exist(loginFile) {
 		err := ioutil.WriteFile(loginFile, []byte(strings.TrimSpace(`
 #!/bin/bash

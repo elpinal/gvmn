@@ -22,8 +22,8 @@ func mustRemoveAll(dir string) {
 func TestMain(m *testing.M) {
 	flag.Parse()
 
-	var err error
-	GvmnDir, err = ioutil.TempDir("", "")
+	tempdir, err := ioutil.TempDir("", "")
+	setGvmnroot(tempdir)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "TempDir: %v", err)
 		os.Exit(2)
@@ -45,7 +45,7 @@ func TestMain(m *testing.M) {
 
 	r := m.Run()
 
-	mustRemoveAll(GvmnDir)
+	mustRemoveAll(tempdir)
 	os.Exit(r)
 }
 
@@ -56,7 +56,7 @@ func TestCmdInstall(t *testing.T) {
 	if got := runInstall([]string{"go1.7"}); got != 0 {
 		t.Fatalf("got %v, want 0", got)
 	}
-	bin := filepath.Join(GvmnDir, "versions/go1.7/bin/go")
+	bin := filepath.Join(gvmnrootVersions, "go1.7", "bin", "go")
 	out, err := exec.Command(bin, "version").Output()
 	if err != nil {
 		t.Fatalf("go version: %v", err)
@@ -88,7 +88,7 @@ func BenchmarkCheckout(b *testing.B) {
 			b.Fatalf(`checkout("go1.7") failed: %v`, err)
 		}
 		b.StopTimer()
-		mustRemoveAll(filepath.Join(GvmnDir, "versions"))
+		mustRemoveAll(gvmnrootVersions)
 		b.StartTimer()
 	}
 }
