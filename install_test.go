@@ -107,9 +107,6 @@ func BenchmarkCheckout2(b *testing.B) {
 		if err := checkout2("go1.7"); err != nil {
 			b.Fatalf(`checkout2("go1.7") failed: %v`, err)
 		}
-		if err := writeVersion("go1.7"); err != nil {
-			b.Fatalf(`writeVersion("go1.7") failed: %v`, err)
-		}
 		b.StopTimer()
 		mustRemoveAll(filepath.Join(GvmnDir, "versions"))
 		b.StartTimer()
