@@ -111,6 +111,16 @@ func checkout(version string) *doubleError {
 	return nil
 }
 
+func checkout2(version string) *doubleError {
+	versionsDir := filepath.Join(GvmnDir, "versions", version)
+	cmd := exec.Command("git", "clone", "--depth=1", "--branch="+version, filepath.Join(GvmnDir, "repo"), versionsDir)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		return &doubleError{errors.Wrap(err, "checkout "+version+" failed"), fmt.Errorf("%v", out)}
+	}
+	return nil
+}
+
 // latestTag reports the latest tag of the Go repository.
 func latestTag() (string, error) {
 	cmd := exec.Command("git", "rev-list", "--tags", "--max-count=1")
