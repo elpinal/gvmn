@@ -62,56 +62,8 @@ func build(version string) *doubleError {
 	return nil
 }
 
-// writeVersion writes the version to $GOROOT/VERSION
-// to enable Go to determine the version to use in the version string.
-func writeVersion(version string) *doubleError {
-	var ver string
-	if strings.HasPrefix(version, "go") {
-		ver = version
-	} else {
-		cmd := exec.Command("git", "log", "-n", "1", "--format=format: +%h %cd", version)
-		cmd.Dir = filepath.Join(GvmnDir, "repo")
-		var stderr bytes.Buffer
-		cmd.Stderr = &stderr
-		tag, err := cmd.Output()
-		if err != nil {
-			return &doubleError{err, fmt.Errorf(stderr.String())}
-		}
-		ver = "devel" + strings.TrimSpace(string(tag))
-	}
-	if err := ioutil.WriteFile(filepath.Join(GvmnDir, "versions", version, "VERSION"), []byte(ver), 0666); err != nil {
-		return &doubleError{errors.Wrap(err, "failed to write the version to VERSION"), nil}
-	}
-	return nil
-}
-
 // checkout checkouts specified version of the Go repository.
 func checkout(version string) *doubleError {
-	cmd := exec.Command("git", "archive", "--prefix="+version+"/", version)
-	cmd.Dir = filepath.Join(GvmnDir, "repo")
-	var stderr bytes.Buffer
-	cmd.Stderr = &stderr
-	out, err := cmd.Output()
-	if err != nil {
-		return &doubleError{errors.Wrap(err, "git archive "+version+" failed"), fmt.Errorf(stderr.String())}
-	}
-
-	versionsDir := filepath.Join(GvmnDir, "versions")
-	if !exist(versionsDir) {
-		if err := os.MkdirAll(versionsDir, 0777); err != nil {
-			return &doubleError{err, nil}
-		}
-	}
-	cmd = exec.Command("tar", "xf", "-")
-	cmd.Dir = versionsDir
-	cmd.Stdin = bytes.NewReader(out)
-	if stdout, err := cmd.Output(); err != nil {
-		return &doubleError{errors.Wrap(err, "tar failed"), fmt.Errorf("%s", stdout)}
-	}
-	return nil
-}
-
-func checkout2(version string) *doubleError {
 	versionsDir := filepath.Join(GvmnDir, "versions", version)
 	cmd := exec.Command("git", "clone", filepath.Join(GvmnDir, "repo"), versionsDir)
 	out, err := cmd.CombinedOutput()
@@ -158,7 +110,7 @@ func install(version string) error {
 		}
 	}
 
-	if err := checkout2(version); err != nil {
+	if err := checkout(version); err != nil {
 		return err
 	}
 
