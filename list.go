@@ -26,9 +26,9 @@ func init() {
 
 // runList executes list command and return exit code.
 func runList(args []string) int {
-	current, _ := os.Readlink(filepath.Join(gvmnrootVersions, "current"))
+	current, _ := os.Readlink(filepath.Join(gvmnrootGo, "current"))
 	currentVersion := filepath.Base(current)
-	versions, err := ioutil.ReadDir(gvmnrootVersions)
+	versions, err := ioutil.ReadDir(gvmnrootGo)
 	if err != nil {
 		log.Print(errors.Wrap(err, "failed to list versions of Go"))
 	}

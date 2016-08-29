@@ -50,7 +50,7 @@ func build(version string) *doubleError {
 		env = append(os.Environ(), "GOROOT_BOOTSTRAP="+string(bytes.TrimSuffix(goroot, []byte("\n"))))
 	}
 	cmd := exec.Command("./make.bash")
-	cmd.Dir = filepath.Join(gvmnrootVersions, version, "src")
+	cmd.Dir = filepath.Join(gvmnrootGo, version, "src")
 	cmd.Env = env
 	var buf bytes.Buffer
 	cmd.Stderr = &buf
@@ -62,7 +62,7 @@ func build(version string) *doubleError {
 
 // checkout checkouts specified version of the Go repository.
 func checkout(version string) *doubleError {
-	versionsDir := filepath.Join(gvmnrootVersions, version)
+	versionsDir := filepath.Join(gvmnrootGo, version)
 	cmd := exec.Command("git", "clone", gvmnrootRepo, versionsDir)
 	out, err := cmd.CombinedOutput()
 	if err != nil {

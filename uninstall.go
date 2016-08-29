@@ -24,7 +24,7 @@ func init() {
 // uninstall uninstalls specified versions of Go.
 func uninstall(versions []string) error {
 	for _, version := range versions {
-		dir := filepath.Join(gvmnrootVersions, version)
+		dir := filepath.Join(gvmnrootGo, version)
 		if !exist(dir) {
 			return fmt.Errorf("no Go version specified")
 		}

@@ -63,17 +63,17 @@ var commands = []*Command{
 var RepoURL = "git://github.com/golang/go.git"
 
 var (
-	gvmnroot         string
-	gvmnrootEtc      string
-	gvmnrootRepo     string
-	gvmnrootVersions string
+	gvmnroot     string
+	gvmnrootEtc  string
+	gvmnrootGo   string
+	gvmnrootRepo string
 )
 
 func setGvmnroot(root string) {
 	gvmnroot = root
 	gvmnrootEtc = filepath.Join(root, "etc")
+	gvmnrootGo = filepath.Join(root, "go")
 	gvmnrootRepo = filepath.Join(root, "repo")
-	gvmnrootVersions = filepath.Join(root, "versions")
 }
 
 func exist(path string) bool {
@@ -116,7 +116,7 @@ func main() {
 
 __gvmn_configure_path()
 {
-  local gvmn_bin_path="$HOME/.gvmn/versions/current/bin"
+  local gvmn_bin_path="$HOME/.gvmn/go/current/bin"
 
   echo "$PATH" | grep -Fqv "$gvmn_bin_path" &&
     PATH="$gvmn_bin_path:$PATH"

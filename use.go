@@ -28,9 +28,9 @@ func runUse(args []string) int {
 		log.Print("gvmn use: no Go version specified")
 		return 1
 	}
-	currentDir := filepath.Join(gvmnrootVersions, "current")
+	currentDir := filepath.Join(gvmnrootGo, "current")
 	version := args[0]
-	versionsDir := filepath.Join(gvmnrootVersions, version)
+	versionsDir := filepath.Join(gvmnrootGo, version)
 	if !exist(versionsDir) {
 		log.Print("no installed version of Go specified")
 		return 1
