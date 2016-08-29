@@ -113,7 +113,7 @@ func checkout(version string) *doubleError {
 
 func checkout2(version string) *doubleError {
 	versionsDir := filepath.Join(GvmnDir, "versions", version)
-	cmd := exec.Command("git", "clone", "--depth=1", "--branch="+version, filepath.Join(GvmnDir, "repo"), versionsDir)
+	cmd := exec.Command("git", "clone", "--branch="+version, filepath.Join(GvmnDir, "repo"), versionsDir)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		return &doubleError{errors.Wrap(err, "checkout "+version+" failed"), fmt.Errorf("%s", out)}
