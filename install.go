@@ -106,7 +106,7 @@ func checkout(version string) *doubleError {
 	cmd.Dir = versionsDir
 	cmd.Stdin = bytes.NewReader(out)
 	if stdout, err := cmd.Output(); err != nil {
-		return &doubleError{errors.Wrap(err, "tar failed"), fmt.Errorf("%v", stdout)}
+		return &doubleError{errors.Wrap(err, "tar failed"), fmt.Errorf("%s", stdout)}
 	}
 	return nil
 }
@@ -116,7 +116,7 @@ func checkout2(version string) *doubleError {
 	cmd := exec.Command("git", "clone", "--depth=1", "--branch="+version, filepath.Join(GvmnDir, "repo"), versionsDir)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
-		return &doubleError{errors.Wrap(err, "checkout "+version+" failed"), fmt.Errorf("%v", out)}
+		return &doubleError{errors.Wrap(err, "checkout "+version+" failed"), fmt.Errorf("%s", out)}
 	}
 	return nil
 }
@@ -171,7 +171,7 @@ func download() *doubleError {
 	if !exist(dir) {
 		out, err := exec.Command("git", "clone", "--bare", RepoURL, dir).CombinedOutput()
 		if err != nil {
-			return &doubleError{errors.Wrap(err, "cloning repository failed"), fmt.Errorf("%v", out)}
+			return &doubleError{errors.Wrap(err, "cloning repository failed"), fmt.Errorf("%s", out)}
 		}
 	}
 
