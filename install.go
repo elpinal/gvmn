@@ -173,8 +173,8 @@ func download(version string) *doubleError {
 
 	cmd := exec.Command("git", "fetch", "--depth=1", "origin", version+":"+version)
 	cmd.Dir = dir
-	if err := cmd.Run(); err != nil {
-		return &doubleError{errors.Wrap(err, "failed to fetch"), nil}
+	if out, err := cmd.CombinedOutput(); err != nil {
+		return &doubleError{errors.Wrap(err, "failed to fetch"), fmt.Errorf("%s", out)}
 	}
 	return nil
 }
