@@ -70,8 +70,8 @@ func TestInstallUntilBuild(t *testing.T) {
 	if !testing.Short() {
 		t.Skip("skipping in non-short mode")
 	}
-	if err := download("go1.7"); err != nil {
-		t.Fatalf(`download("go1.7") failed: %v`, err)
+	if err := download(); err != nil {
+		t.Fatalf("download() failed: %v", err)
 	}
 	if err := checkout("go1.7"); err != nil {
 		t.Fatalf(`checkout("go1.7") failed: %v`, err)
@@ -82,8 +82,8 @@ func TestInstallUntilBuild(t *testing.T) {
 }
 
 func BenchmarkCheckout(b *testing.B) {
-	if err := download("go1.7"); err != nil {
-		b.Fatalf(`download("go1.7") failed: %v`, err)
+	if err := download(); err != nil {
+		b.Fatalf("download() failed: %v", err)
 	}
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -99,8 +99,8 @@ func BenchmarkCheckout(b *testing.B) {
 	}
 }
 func BenchmarkCheckout2(b *testing.B) {
-	if err := download("go1.7"); err != nil {
-		b.Fatalf(`download("go1.7") failed: %v`, err)
+	if err := download(); err != nil {
+		b.Fatalf("download() failed: %v", err)
 	}
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
