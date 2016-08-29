@@ -98,6 +98,7 @@ func BenchmarkCheckout(b *testing.B) {
 		b.StartTimer()
 	}
 }
+
 func BenchmarkCheckout2(b *testing.B) {
 	if err := download(); err != nil {
 		b.Fatalf("download() failed: %v", err)
