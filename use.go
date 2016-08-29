@@ -35,11 +35,9 @@ func runUse(args []string) int {
 		log.Print("no installed version of Go specified")
 		return 1
 	}
-	if exist(currentDir) {
-		if err := os.RemoveAll(currentDir); err != nil {
-			log.Print(errors.Wrap(err, "failed to unuse former version of Go"))
-			return 1
-		}
+	if err := os.RemoveAll(currentDir); err != nil {
+		log.Print(errors.Wrap(err, "failed to unuse former version of Go"))
+		return 1
 	}
 	err := os.Symlink(versionsDir, currentDir)
 	if err != nil {
