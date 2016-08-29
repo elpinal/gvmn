@@ -90,15 +90,9 @@ func main() {
 	}
 	GvmnDir = filepath.Join(home, ".gvmn")
 
-	if !exist(GvmnDir) {
-		if err := os.MkdirAll(GvmnDir, 0777); err != nil {
-			log.Print(err)
-			os.Exit(2)
-		}
-	}
 	etcDir := filepath.Join(GvmnDir, "etc")
 	if !exist(etcDir) {
-		if err := os.Mkdir(etcDir, 0777); err != nil {
+		if err := os.MkdirAll(etcDir, 0777); err != nil {
 			log.Print(err)
 			os.Exit(2)
 		}
