@@ -57,7 +57,7 @@ var commands = []*Command{
 	cmdGet,
 	cmdList,
 	cmdUse,
-	cmdUninstall,
+	cmdRemove,
 }
 
 var RepoURL = "git://github.com/golang/go.git"
