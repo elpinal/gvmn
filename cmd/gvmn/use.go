@@ -2,10 +2,8 @@ package main
 
 import (
 	"log"
-	"os"
-	"path/filepath"
 
-	"github.com/pkg/errors"
+	"github.com/susp/gvmn"
 )
 
 var cmdUse = &Command{
@@ -28,22 +26,9 @@ func runUse(args []string) int {
 		log.Print("gvmn use: no go version specified")
 		return 1
 	}
-	currentDir := filepath.Join(gvmnrootGo, "current")
-	version := args[0]
-	versionsDir := filepath.Join(gvmnrootGo, version)
-	if !exist(versionsDir) {
-		log.Print("no installed go version specified")
+	if err := gvmn.Use(args[0]); err != nil {
+		log.Print(err)
 		return 1
 	}
-	if err := os.RemoveAll(currentDir); err != nil {
-		log.Print(errors.Wrap(err, "failed to stop using former go version"))
-		return 1
-	}
-	err := os.Symlink(versionsDir, currentDir)
-	if err != nil {
-		log.Print(errors.Wrap(err, "failed to create symbolic link"))
-		return 1
-	}
-
 	return 0
 }

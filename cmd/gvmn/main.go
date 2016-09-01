@@ -5,7 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -13,6 +12,7 @@ import (
 	"text/template"
 
 	"github.com/mitchellh/go-homedir"
+	"github.com/susp/gvmn"
 )
 
 // A Command is an implementation of a gvmn command
@@ -60,27 +60,6 @@ var commands = []*Command{
 	cmdRemove,
 }
 
-var RepoURL = "git://github.com/golang/go.git"
-
-var (
-	gvmnroot     string
-	gvmnrootEtc  string
-	gvmnrootGo   string
-	gvmnrootRepo string
-)
-
-func setGvmnroot(root string) {
-	gvmnroot = root
-	gvmnrootEtc = filepath.Join(root, "etc")
-	gvmnrootGo = filepath.Join(root, "go")
-	gvmnrootRepo = filepath.Join(root, "repo")
-}
-
-func exist(path string) bool {
-	_, err := os.Stat(path)
-	return err == nil
-}
-
 func main() {
 	flag.Usage = usage
 	flag.Parse()
@@ -101,37 +80,7 @@ func main() {
 		log.Print(err)
 		os.Exit(2)
 	}
-	setGvmnroot(filepath.Join(home, ".gvmn"))
-
-	if !exist(gvmnrootEtc) {
-		if err := os.MkdirAll(gvmnrootEtc, 0777); err != nil {
-			log.Print(err)
-			os.Exit(2)
-		}
-	}
-	loginFile := filepath.Join(gvmnrootEtc, "login")
-	if !exist(loginFile) {
-		err := ioutil.WriteFile(loginFile, []byte(strings.TrimSpace(`
-#!/bin/bash
-
-__gvmn_configure_path()
-{
-  local gvmn_bin_path="$HOME/.gvmn/go/current/bin"
-
-  echo "$PATH" | grep -Fqv "$gvmn_bin_path" &&
-    PATH="$gvmn_bin_path:$PATH"
-}
-
-
-__gvmn_configure_path
-
-# __END__
-		`)), 0666)
-		if err != nil {
-			log.Print(err)
-			os.Exit(2)
-		}
-	}
+	gvmn.SetRoot(filepath.Join(home, ".gvmn"))
 
 	for _, cmd := range commands {
 		if cmd.Name() == args[0] {

@@ -1,13 +1,9 @@
 package main
 
 import (
-	"fmt"
-	"io/ioutil"
 	"log"
-	"os"
-	"path/filepath"
 
-	"github.com/pkg/errors"
+	"github.com/susp/gvmn"
 )
 
 var cmdList = &Command{
@@ -27,24 +23,9 @@ func init() {
 
 // runList executes list command and return exit code.
 func runList(args []string) int {
-	current, _ := os.Readlink(filepath.Join(gvmnrootGo, "current"))
-	currentVersion := filepath.Base(current)
-	versions, err := ioutil.ReadDir(gvmnrootGo)
-	if err != nil {
-		log.Print(errors.Wrap(err, "failed to list installed go versions"))
-	}
-	for _, version := range versions {
-		ver := version.Name()
-		if ver == "current" {
-			continue
-		}
-		var mark string
-		if ver == currentVersion {
-			mark = "*"
-		} else {
-			mark = " "
-		}
-		fmt.Println(mark, ver)
+	if err := gvmn.List(); err != nil {
+		log.Print(err)
+		return 1
 	}
 	return 0
 }
