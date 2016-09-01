@@ -83,8 +83,8 @@ func latestTag() (string, error) {
 	return string(bytes.TrimSuffix(tag, []byte("\n"))), nil
 }
 
-// Get downloads and installs Go.
-func Get(version string) error {
+// Install installs Go version.
+func Install(version string) error {
 	if version == "latest" {
 		var err error
 		version, err = latestTag()
@@ -117,6 +117,17 @@ func Download() *doubleError {
 	cmd.Dir = dir
 	if out, err := cmd.CombinedOutput(); err != nil {
 		return &doubleError{errors.Wrap(err, "failed to fetch"), fmt.Errorf("%s", out)}
+	}
+	return nil
+}
+
+// Get downloads and installs Go.
+func Get(version string) error {
+	if err := Download(); err != nil {
+		return err
+	}
+	if err := Install(version); err != nil {
+		return err
 	}
 	return nil
 }

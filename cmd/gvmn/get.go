@@ -27,11 +27,6 @@ func runGet(args []string) int {
 		return 1
 	}
 
-	if err := gvmn.Download(); err != nil {
-		log.Print(err)
-		return 1
-	}
-
 	if err := gvmn.Get(args[0]); err != nil {
 		log.Print(err)
 		return 1
