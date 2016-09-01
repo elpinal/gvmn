@@ -11,10 +11,10 @@ import (
 	"github.com/pkg/errors"
 )
 
-var cmdInstall = &Command{
-	Run:       runInstall,
-	UsageLine: "install ",
-	Short:     "Install Go",
+var cmdGet = &Command{
+	Run:       runGet,
+	UsageLine: "get version",
+	Short:     "download and install Go",
 	Long: `
 
 	`,
@@ -22,7 +22,7 @@ var cmdInstall = &Command{
 
 func init() {
 	// Set your flag here like below.
-	// cmdInstall.Flag.BoolVar(&flagA, "a", false, "")
+	// cmdGet.Flag.BoolVar(&flagA, "a", false, "")
 }
 
 // doubleError is a type which has two error.
@@ -98,8 +98,8 @@ func latestTag() (string, error) {
 	return string(bytes.TrimSuffix(tag, []byte("\n"))), nil
 }
 
-// install installs the specified version of Go.
-func install(version string) error {
+// get downloads and installs Go.
+func get(version string) error {
 	if version == "latest" {
 		var err error
 		version, err = latestTag()
@@ -136,10 +136,10 @@ func download() *doubleError {
 	return nil
 }
 
-// runInstall executes install command and return exit code.
-func runInstall(args []string) int {
+// runGet executes get command and return exit code.
+func runGet(args []string) int {
 	if len(args) == 0 {
-		log.Print("gvmn install: no Go version specified")
+		log.Print("gvmn get: no Go version specified")
 		return 1
 	}
 
@@ -148,7 +148,7 @@ func runInstall(args []string) int {
 		return 1
 	}
 
-	if err := install(args[0]); err != nil {
+	if err := get(args[0]); err != nil {
 		log.Print(err)
 		return 1
 	}

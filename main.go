@@ -54,7 +54,7 @@ func (c *Command) Usage() {
 // Commands lists the available commands and help topics.
 // The order here is the order in which they are printed by 'gvmn help'.
 var commands = []*Command{
-	cmdInstall,
+	cmdGet,
 	cmdList,
 	cmdUse,
 	cmdUninstall,

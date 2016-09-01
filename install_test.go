@@ -49,11 +49,11 @@ func TestMain(m *testing.M) {
 	os.Exit(r)
 }
 
-func TestCmdInstall(t *testing.T) {
+func TestCmdGet(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping in short mode")
 	}
-	if got := runInstall([]string{"go1.7"}); got != 0 {
+	if got := runGet([]string{"go1.7"}); got != 0 {
 		t.Fatalf("got %v, want 0", got)
 	}
 	bin := filepath.Join(gvmnrootGo, "go1.7", "bin", "go")
@@ -66,7 +66,7 @@ func TestCmdInstall(t *testing.T) {
 	}
 }
 
-func TestInstallUntilBuild(t *testing.T) {
+func TestGetUntilBuild(t *testing.T) {
 	if !testing.Short() {
 		t.Skip("skipping in non-short mode")
 	}
