@@ -12,7 +12,7 @@ var cmdRemove = &Command{
 	UsageLine: "remove versions...",
 	Short:     "remove Go versions",
 	Long: `
-
+Remove removes the specified Go versions.
 	`,
 }
 

@@ -15,7 +15,8 @@ var cmdList = &Command{
 	UsageLine: "list",
 	Short:     "list installed Go versions",
 	Long: `
-
+List lists installed Go versions.
+A Go version selected by gvmn use is marked.
 	`,
 }
 

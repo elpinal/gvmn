@@ -16,7 +16,7 @@ var cmdGet = &Command{
 	UsageLine: "get version",
 	Short:     "download and install Go",
 	Long: `
-
+Get downloads the specified Go version, and then installs it.
 	`,
 }
 
