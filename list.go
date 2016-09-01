@@ -12,8 +12,8 @@ import (
 
 var cmdList = &Command{
 	Run:       runList,
-	UsageLine: "list ",
-	Short:     "List versions of Go",
+	UsageLine: "list",
+	Short:     "list installed Go versions",
 	Long: `
 
 	`,
@@ -30,7 +30,7 @@ func runList(args []string) int {
 	currentVersion := filepath.Base(current)
 	versions, err := ioutil.ReadDir(gvmnrootGo)
 	if err != nil {
-		log.Print(errors.Wrap(err, "failed to list versions of Go"))
+		log.Print(errors.Wrap(err, "failed to list installed go versions"))
 	}
 	for _, version := range versions {
 		ver := version.Name()

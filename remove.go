@@ -10,7 +10,7 @@ import (
 var cmdRemove = &Command{
 	Run:       runRemove,
 	UsageLine: "remove versions...",
-	Short:     "remove Go",
+	Short:     "remove Go versions",
 	Long: `
 
 	`,
@@ -21,12 +21,12 @@ func init() {
 	// cmdRemove.Flag.BoolVar(&flagA, "a", false, "")
 }
 
-// remove removes specified versions of Go.
+// remove removes the specified Go versions.
 func remove(versions []string) error {
 	for _, version := range versions {
 		dir := filepath.Join(gvmnrootGo, version)
 		if !exist(dir) {
-			return fmt.Errorf("no Go version specified")
+			return fmt.Errorf("no go version specified")
 		}
 		if err := os.RemoveAll(dir); err != nil {
 			return err
@@ -38,7 +38,7 @@ func remove(versions []string) error {
 // runRemove executes remove command and return exit code.
 func runRemove(args []string) int {
 	if len(args) == 0 {
-		log.Print("gvmn remove: no Go versions specified")
+		log.Print("gvmn remove: no go versions specified")
 		return 1
 	}
 

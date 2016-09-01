@@ -43,7 +43,7 @@ func (e *doubleError) Error() string {
 	return fmt.Sprintf("%v\n%v", e.a, e.b)
 }
 
-// build builds the specified version of Go.
+// build builds the specified Go version.
 func build(version string) *doubleError {
 	var env []string
 	if goroot, err := exec.Command("go", "env", "GOROOT").Output(); err == nil {
@@ -60,7 +60,7 @@ func build(version string) *doubleError {
 	return nil
 }
 
-// checkout checkouts specified version of the Go repository.
+// checkout checkouts the specified version of the Go repository.
 func checkout(version string) *doubleError {
 	versionsDir := filepath.Join(gvmnrootGo, version)
 	cmd := exec.Command("git", "clone", gvmnrootRepo, versionsDir)
@@ -139,7 +139,7 @@ func download() *doubleError {
 // runGet executes get command and return exit code.
 func runGet(args []string) int {
 	if len(args) == 0 {
-		log.Print("gvmn get: no Go version specified")
+		log.Print("gvmn get: no go version specified")
 		return 1
 	}
 
