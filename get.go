@@ -123,7 +123,7 @@ func mirror() *doubleError {
 }
 
 // Download fetches the go repository.
-func Download() *doubleError {
+func Download() error {
 	if !exist(gvmnrootRepo) {
 		if err := mirror(); err != nil {
 			return err
