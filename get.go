@@ -45,6 +45,14 @@ func build(version string) *doubleError {
 	return nil
 }
 
+// Install installs Go version.
+func Install(version string) error {
+	if err := build(version); err != nil {
+		return err
+	}
+	return nil
+}
+
 // checkout checkouts the specified version of the Go repository.
 func checkout(version string) *doubleError {
 	versionsDir := filepath.Join(gvmnrootGo, version)
@@ -59,17 +67,6 @@ func checkout(version string) *doubleError {
 	out, err = cmd.CombinedOutput()
 	if err != nil {
 		return &doubleError{errors.Wrap(err, "git reset failed"), fmt.Errorf("%s", out)}
-	}
-	return nil
-}
-
-// Install installs Go version.
-func Install(version string) error {
-	if err := checkout(version); err != nil {
-		return err
-	}
-	if err := build(version); err != nil {
-		return err
 	}
 	return nil
 }
@@ -93,8 +90,8 @@ func mirror() *doubleError {
 	return nil
 }
 
-// Download fetches the go repository.
-func Download() error {
+// download fetches the go repository.
+func download() error {
 	if !exist(gvmnrootRepo) {
 		if err := mirror(); err != nil {
 			return err
@@ -106,9 +103,20 @@ func Download() error {
 	return nil
 }
 
+// Download fetches the Go repository and check out version.
+func Download(version string) error {
+	if err := download(); err != nil {
+		return err
+	}
+	if err := checkout(version); err != nil {
+		return err
+	}
+	return nil
+}
+
 // Get downloads and installs Go.
 func Get(version string) error {
-	if err := Download(); err != nil {
+	if err := Download(version); err != nil {
 		return err
 	}
 	if err := Install(version); err != nil {
@@ -140,7 +148,7 @@ func latestTag() (string, error) {
 // LatestTag downloads the updated Go repository and reports
 // the latest tag of it.
 func LatestTag() (string, error) {
-	if err := Download(); err != nil {
+	if err := download(); err != nil {
 		return "", err
 	}
 	return latestTag()
