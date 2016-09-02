@@ -103,7 +103,7 @@ func Install(version string) error {
 	return nil
 }
 
-// Download fetches repository from RepoURL.
+// Download fetches the go repository.
 func Download() *doubleError {
 	dir := gvmnrootRepo
 	if !exist(dir) {
