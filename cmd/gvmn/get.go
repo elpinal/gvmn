@@ -36,9 +36,11 @@ func runGet(args []string) int {
 		}
 		version = latest
 	}
+
 	if err := gvmn.Get(version); err != nil {
 		log.Print(err)
 		return 1
 	}
+
 	return 0
 }

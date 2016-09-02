@@ -26,7 +26,6 @@ func runRemove(args []string) int {
 		log.Print("gvmn remove: no go versions specified")
 		return 1
 	}
-
 	if err := gvmn.Remove(args); err != nil {
 		log.Print(err)
 		return 1

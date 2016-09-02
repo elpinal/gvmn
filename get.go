@@ -68,6 +68,7 @@ func checkout(version string) *doubleError {
 	if err != nil {
 		return &doubleError{errors.Wrap(err, "git reset failed"), fmt.Errorf("%s", out)}
 	}
+
 	return nil
 }
 
