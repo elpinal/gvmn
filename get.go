@@ -71,7 +71,7 @@ func checkout(version string) *doubleError {
 	return nil
 }
 
-// update updates the go repository.
+// update updates the Go repository.
 func update() *doubleError {
 	cmd := exec.Command("git", "fetch")
 	cmd.Dir = gvmnrootRepo
@@ -81,7 +81,7 @@ func update() *doubleError {
 	return nil
 }
 
-// mirror mirrors the go repository.
+// mirror mirrors the Go repository.
 func mirror() *doubleError {
 	out, err := exec.Command("git", "clone", "--mirror", RepoURL, gvmnrootRepo).CombinedOutput()
 	if err != nil {
@@ -90,7 +90,7 @@ func mirror() *doubleError {
 	return nil
 }
 
-// download fetches the go repository.
+// download fetches the Go repository.
 func download() error {
 	if !exist(gvmnrootRepo) {
 		if err := mirror(); err != nil {
