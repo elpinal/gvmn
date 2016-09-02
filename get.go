@@ -63,40 +63,11 @@ func checkout(version string) *doubleError {
 	return nil
 }
 
-// latestTag reports the latest tag of the Go repository.
-func latestTag() (string, error) {
-	cmd := exec.Command("git", "rev-list", "--tags", "--max-count=1")
-	cmd.Dir = gvmnrootRepo
-	out, err := cmd.Output()
-	if err != nil {
-		return "", errors.Wrap(err, "git rev-list failed")
-	}
-	sha := string(bytes.TrimSuffix(out, []byte("\n")))
-	cmd = exec.Command("git", "describe", "--tags", sha)
-	cmd.Dir = gvmnrootRepo
-	var stderr bytes.Buffer
-	cmd.Stderr = &stderr
-	tag, err := cmd.Output()
-	if err != nil {
-		return "", errors.Wrap(err, stderr.String())
-	}
-	return string(bytes.TrimSuffix(tag, []byte("\n"))), nil
-}
-
 // Install installs Go version.
 func Install(version string) error {
-	if version == "latest" {
-		var err error
-		version, err = latestTag()
-		if err != nil {
-			return errors.Wrap(err, "failed to get the latest version")
-		}
-	}
-
 	if err := checkout(version); err != nil {
 		return err
 	}
-
 	if err := build(version); err != nil {
 		return err
 	}
@@ -144,4 +115,33 @@ func Get(version string) error {
 		return err
 	}
 	return nil
+}
+
+// latestTag reports the latest tag of the Go repository.
+func latestTag() (string, error) {
+	cmd := exec.Command("git", "rev-list", "--tags", "--max-count=1")
+	cmd.Dir = gvmnrootRepo
+	out, err := cmd.Output()
+	if err != nil {
+		return "", errors.Wrap(err, "git rev-list failed")
+	}
+	sha := string(bytes.TrimSuffix(out, []byte("\n")))
+	cmd = exec.Command("git", "describe", "--tags", sha)
+	cmd.Dir = gvmnrootRepo
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+	tag, err := cmd.Output()
+	if err != nil {
+		return "", errors.Wrap(err, stderr.String())
+	}
+	return string(bytes.TrimSuffix(tag, []byte("\n"))), nil
+}
+
+// LatestTag downloads the updated Go repository and reports
+// the latest tag of it.
+func LatestTag() (string, error) {
+	if err := Download(); err != nil {
+		return "", err
+	}
+	return latestTag()
 }

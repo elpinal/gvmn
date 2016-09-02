@@ -27,7 +27,16 @@ func runGet(args []string) int {
 		return 1
 	}
 
-	if err := gvmn.Get(args[0]); err != nil {
+	version := args[0]
+	if version == "latest" {
+		latest, err := gvmn.LatestTag()
+		if err != nil {
+			log.Print(err)
+			return 1
+		}
+		version = latest
+	}
+	if err := gvmn.Get(version); err != nil {
 		log.Print(err)
 		return 1
 	}
