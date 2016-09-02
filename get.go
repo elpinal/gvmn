@@ -103,20 +103,34 @@ func Install(version string) error {
 	return nil
 }
 
-// Download fetches the go repository.
-func Download() *doubleError {
-	dir := gvmnrootRepo
-	if !exist(dir) {
-		out, err := exec.Command("git", "clone", "--mirror", RepoURL, dir).CombinedOutput()
-		if err != nil {
-			return &doubleError{errors.Wrap(err, "cloning repository failed"), fmt.Errorf("%s", out)}
-		}
-	}
-
+// update updates the go repository.
+func update() *doubleError {
 	cmd := exec.Command("git", "fetch")
-	cmd.Dir = dir
+	cmd.Dir = gvmnrootRepo
 	if out, err := cmd.CombinedOutput(); err != nil {
 		return &doubleError{errors.Wrap(err, "failed to fetch"), fmt.Errorf("%s", out)}
+	}
+	return nil
+}
+
+// mirror mirrors the go repository.
+func mirror() *doubleError {
+	out, err := exec.Command("git", "clone", "--mirror", RepoURL, gvmnrootRepo).CombinedOutput()
+	if err != nil {
+		return &doubleError{errors.Wrap(err, "cloning repository failed"), fmt.Errorf("%s", out)}
+	}
+	return nil
+}
+
+// Download fetches the go repository.
+func Download() *doubleError {
+	if !exist(gvmnrootRepo) {
+		if err := mirror(); err != nil {
+			return err
+		}
+	}
+	if err := update(); err != nil {
+		return err
 	}
 	return nil
 }
