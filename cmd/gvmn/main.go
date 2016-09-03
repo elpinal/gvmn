@@ -75,12 +75,16 @@ func main() {
 		return
 	}
 
-	home, err := homedir.Dir()
-	if err != nil {
-		log.Print(err)
-		os.Exit(2)
+	if root := os.Getenv("GVMNROOT"); root != "" {
+		gvmn.SetRoot(root)
+	} else {
+		home, err := homedir.Dir()
+		if err != nil {
+			log.Print(err)
+			os.Exit(2)
+		}
+		gvmn.SetRoot(filepath.Join(home, ".gvmn"))
 	}
-	gvmn.SetRoot(filepath.Join(home, ".gvmn"))
 
 	for _, cmd := range commands {
 		if cmd.Name() == args[0] {
