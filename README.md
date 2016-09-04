@@ -28,6 +28,8 @@ Use "gvmn help [command]" for more information about a command.
 
 ### Example
 
+Get Go specifying a version:
+
 ```bash
 $ # To get Go 1.7
 $ gvmn get go1.7
@@ -36,10 +38,14 @@ $ # Then, to use Go 1.7
 $ gvmn use go1.7
 ```
 
+Get the latest tagged Go:
+
 ```bash
 $ # To get the latest tagged Go, such as go1.7 and go1.7rc6
 $ gvmn get latest
 ```
+
+Know what Go versions is installed:
 
 ```bash
 $ # To list installed Go
@@ -51,6 +57,8 @@ $ gvmn list
   go1.7rc1
   go1.7rc6
 ```
+
+Say goodbye to particular Go versions:
 
 ```bash
 $ # To stop using Go 1.7
