@@ -8,6 +8,7 @@ import (
 	"github.com/pkg/errors"
 )
 
+// Use selects a Go version to use.
 func Use(version string) error {
 	currentDir := filepath.Join(gvmnrootGo, "current")
 	versionsDir := filepath.Join(gvmnrootGo, version)

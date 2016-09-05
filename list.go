@@ -9,6 +9,8 @@ import (
 	"github.com/pkg/errors"
 )
 
+// List prints installed Go versions.
+// A currently used Go version is marked by *.
 func List() error {
 	current, _ := os.Readlink(filepath.Join(gvmnrootGo, "current"))
 	currentVersion := filepath.Base(current)

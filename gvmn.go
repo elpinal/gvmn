@@ -16,6 +16,7 @@ import (
 	"path/filepath"
 )
 
+// RepoURL indicates the Go original repository url.
 var RepoURL = "git://github.com/golang/go.git"
 
 var (
