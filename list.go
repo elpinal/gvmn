@@ -16,7 +16,7 @@ func List() error {
 	currentVersion := filepath.Base(current)
 	versions, err := ioutil.ReadDir(gvmnrootGo)
 	if err != nil {
-		return errors.Wrap(err, "failed to list installed go versions")
+		return errors.Wrap(err, "ReadDir")
 	}
 	for _, version := range versions {
 		ver := version.Name()
