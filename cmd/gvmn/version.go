@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/susp/gvmn"
 )
@@ -16,8 +17,8 @@ var cmdVersion = &Command{
 
 func runVersion(cmd *Command, args []string) int {
 	if len(args) != 0 {
-		fmt.Fprint(os.Stderr, "usage: version\n\n")
-		fmt.Fprint(os.Stderr, "Version prints the gvmn version.\n")
+		fmt.Fprintf(os.Stderr, "usage: %s\n\n", cmd.UsageLine)
+		fmt.Fprintf(os.Stderr, "%s\n", strings.TrimSpace(cmd.Long))
 		return 2
 	}
 
