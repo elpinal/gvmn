@@ -108,7 +108,7 @@ func download() error {
 // Download fetches the Go repository and check out version.
 func Download(version string) error {
 	if exist(filepath.Join(gvmnrootGo, version)) {
-		return fmt.Errorf("%v is already downloaded", version)
+		return nil
 	}
 	if err := download(); err != nil {
 		return err
