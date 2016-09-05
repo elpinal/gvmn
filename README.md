@@ -44,15 +44,17 @@ $ gvmn get latest
 Know what Go versions is installed or downloaded:
 
 ```bash
-$ # Now, go1.7 is selected to use.
-$ # And, go1.4 is just downloaded.
 $ gvmn list
-  go1.4 (just downloaded; not installed)
-* go1.6
-  go1.7
+  go1.6
+* go1.7
   go1.7beta2
-  go1.7rc1
   go1.7rc6
+```
+
+Select a Go version to use:
+
+```bash
+$ gvmn use go1.6
 ```
 
 Say goodbye to particular Go versions:
