@@ -10,9 +10,7 @@ var cmdGet = &Command{
 	Run:       runGet,
 	UsageLine: "get version",
 	Short:     "download and install Go",
-	Long: `
-Get downloads the specified Go version, and then installs it.
-	`,
+	Long:      `Get downloads the specified Go version, and then installs it.`,
 }
 
 func init() {

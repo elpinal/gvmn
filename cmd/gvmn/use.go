@@ -10,9 +10,7 @@ var cmdUse = &Command{
 	Run:       runUse,
 	UsageLine: "use version",
 	Short:     "select a Go version to use",
-	Long: `
-Use selects a Go version to use.
-	`,
+	Long:      `Use selects a Go version to use.`,
 }
 
 func init() {

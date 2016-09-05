@@ -10,9 +10,7 @@ var cmdRemove = &Command{
 	Run:       runRemove,
 	UsageLine: "remove versions...",
 	Short:     "remove Go versions",
-	Long: `
-Remove removes the specified Go versions.
-	`,
+	Long:      `Remove removes the specified Go versions.`,
 }
 
 func init() {
