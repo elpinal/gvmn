@@ -13,11 +13,6 @@ var cmdUse = &Command{
 	Long:      `Use selects a Go version to use.`,
 }
 
-func init() {
-	// Set your flag here like below.
-	// cmdUse.Flag.BoolVar(&flagA, "a", false, "")
-}
-
 // runUse executes use command and return exit code.
 func runUse(cmd *Command, args []string) int {
 	if len(args) == 0 {

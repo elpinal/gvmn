@@ -13,11 +13,6 @@ var cmdRemove = &Command{
 	Long:      `Remove removes the specified Go versions.`,
 }
 
-func init() {
-	// Set your flag here like below.
-	// cmdRemove.Flag.BoolVar(&flagA, "a", false, "")
-}
-
 // runRemove executes remove command and return exit code.
 func runRemove(cmd *Command, args []string) int {
 	if len(args) == 0 {
