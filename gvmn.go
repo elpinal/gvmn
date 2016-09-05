@@ -16,6 +16,9 @@ import (
 	"path/filepath"
 )
 
+// Version is version string of gvmn.
+const Version = "0.0.0"
+
 // RepoURL indicates the Go original repository url.
 var RepoURL = "git://github.com/golang/go.git"
 

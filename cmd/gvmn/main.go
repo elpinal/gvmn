@@ -58,6 +58,7 @@ var commands = []*Command{
 	cmdList,
 	cmdUse,
 	cmdRemove,
+	cmdVersion,
 }
 
 func main() {
