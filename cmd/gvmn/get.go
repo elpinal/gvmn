@@ -13,9 +13,10 @@ var cmdGet = &Command{
 	Long:      `Get downloads the specified Go version, and then installs it.`,
 }
 
+var getD bool
+
 func init() {
-	// Set your flag here like below.
-	// cmdGet.Flag.BoolVar(&flagA, "a", false, "")
+	cmdGet.Flag.BoolVar(&getD, "d", false, "")
 }
 
 // runGet executes get command and return exit code.
@@ -35,7 +36,16 @@ func runGet(cmd *Command, args []string) int {
 		version = latest
 	}
 
-	if err := gvmn.Get(version); err != nil {
+	if err := gvmn.Download(version); err != nil {
+		log.Print(err)
+		return 1
+	}
+
+	if getD {
+		return 0
+	}
+
+	if err := gvmn.Install(version); err != nil {
 		log.Print(err)
 		return 1
 	}
