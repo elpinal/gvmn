@@ -58,5 +58,10 @@ func runGet(cmd *Command, args []string) int {
 		}
 	}
 
+	if err := gvmn.Use(args[len(args)-1:][0]); err != nil {
+		log.Print(err)
+		return 1
+	}
+
 	return 0
 }
