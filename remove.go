@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 )
 
-// remove removes the specified Go versions.
+// Remove removes the specified Go versions.
 func Remove(versions []string) error {
 	for _, version := range versions {
 		dir := filepath.Join(gvmnrootGo, version)

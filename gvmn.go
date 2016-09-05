@@ -24,7 +24,7 @@ var (
 	gvmnrootRepo string
 )
 
-// Setroot sets root as gvmn's root directory.
+// SetRoot sets root as gvmn's root directory.
 func SetRoot(root string) {
 	gvmnroot = root
 	gvmnrootGo = filepath.Join(root, "go")
