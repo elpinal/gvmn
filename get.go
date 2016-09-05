@@ -66,6 +66,7 @@ func checkout(version string) *doubleError {
 	cmd.Dir = versionsDir
 	out, err = cmd.CombinedOutput()
 	if err != nil {
+		_ = os.RemoveAll(versionsDir)
 		return &doubleError{errors.Wrap(err, "git reset failed"), fmt.Errorf("%s", out)}
 	}
 
