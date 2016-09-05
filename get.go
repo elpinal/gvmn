@@ -47,6 +47,9 @@ func build(version string) *doubleError {
 
 // Install installs Go version.
 func Install(version string) error {
+	if exist(filepath.Join(gvmnrootGo, version, "bin", "go")) {
+		return nil
+	}
 	if err := build(version); err != nil {
 		return err
 	}
