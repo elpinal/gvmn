@@ -22,7 +22,7 @@ func init() {
 }
 
 // runList executes list command and return exit code.
-func runList(args []string) int {
+func runList(cmd *Command, args []string) int {
 	if err := gvmn.List(); err != nil {
 		log.Print(err)
 		return 1

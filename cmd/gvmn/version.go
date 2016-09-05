@@ -14,7 +14,7 @@ var cmdVersion = &Command{
 	Long:      `Version prints the gvmn version.`,
 }
 
-func runVersion(args []string) int {
+func runVersion(cmd *Command, args []string) int {
 	if len(args) != 0 {
 		fmt.Fprint(os.Stderr, "usage: version\n\n")
 		fmt.Fprint(os.Stderr, "Version prints the gvmn version.\n")

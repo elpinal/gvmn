@@ -19,7 +19,7 @@ func init() {
 }
 
 // runGet executes get command and return exit code.
-func runGet(args []string) int {
+func runGet(cmd *Command, args []string) int {
 	if len(args) == 0 {
 		log.Print("gvmn get: no go version specified")
 		return 1

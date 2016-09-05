@@ -19,7 +19,7 @@ func init() {
 }
 
 // runUse executes use command and return exit code.
-func runUse(args []string) int {
+func runUse(cmd *Command, args []string) int {
 	if len(args) == 0 {
 		log.Print("gvmn use: no go version specified")
 		return 1

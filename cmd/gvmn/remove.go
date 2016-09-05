@@ -19,7 +19,7 @@ func init() {
 }
 
 // runRemove executes remove command and return exit code.
-func runRemove(args []string) int {
+func runRemove(cmd *Command, args []string) int {
 	if len(args) == 0 {
 		log.Print("gvmn remove: no go versions specified")
 		return 1

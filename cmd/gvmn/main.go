@@ -19,7 +19,7 @@ import (
 type Command struct {
 	// Run runs the command.
 	// The args are the arguments after the command name.
-	Run func(args []string) int
+	Run func(cmd *Command, args []string) int
 
 	// UsageLine is the one-line usage message.
 	// The first word in the line is taken to be the command name.
@@ -94,7 +94,7 @@ func main() {
 			cmd.Flag.Parse(args[1:])
 			args = cmd.Flag.Args()
 
-			os.Exit(cmd.Run(args))
+			os.Exit(cmd.Run(cmd, args))
 		}
 	}
 
