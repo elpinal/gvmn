@@ -1,3 +1,14 @@
+// Package gvmn provides support for managing Go versions.
+//
+// First of all, SetRoot to determine root directory for gvmn:
+//
+//     gvmn.SetRoot("/path/to/root")
+//
+// Then, Get a specific Go version:
+//
+//     err := gvmn.Get("go1.7")
+//     ...
+//
 package gvmn
 
 import (
