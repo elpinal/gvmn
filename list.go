@@ -36,7 +36,7 @@ func List() error {
 		if !exist(filepath.Join(gvmnrootGo, version.Name(), "bin", "go")) {
 			meta = " (just downloaded; not installed)"
 		}
-		fmt.Println(mark, ver + meta)
+		fmt.Println(mark, ver+meta)
 	}
 	return nil
 }
