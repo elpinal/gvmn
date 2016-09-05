@@ -12,6 +12,9 @@ import (
 // List prints installed Go versions.
 // A currently used Go version is marked by *.
 func List() error {
+	if !exist(gvmnrootGo) {
+		return nil
+	}
 	current, _ := os.Readlink(filepath.Join(gvmnrootGo, "current"))
 	currentVersion := filepath.Base(current)
 	versions, err := ioutil.ReadDir(gvmnrootGo)
