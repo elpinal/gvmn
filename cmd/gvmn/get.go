@@ -8,9 +8,14 @@ import (
 
 var cmdGet = &Command{
 	Run:       runGet,
-	UsageLine: "get version",
+	UsageLine: "get [-d] version",
 	Short:     "download and install Go",
-	Long:      `Get downloads the specified Go version, and then installs it.`,
+	Long:      `
+Get downloads the specified Go version, and then installs it.
+
+The -d flag instructs get to stop after downloading the Go version; that is,
+it instructs get not to install the Go version.
+`,
 }
 
 var getD bool
