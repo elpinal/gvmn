@@ -22,6 +22,7 @@ The commands are:
         list        list installed Go versions
         use         select a Go version to use
         remove      remove Go versions
+        version     print gvmn version
 
 Use "gvmn help [command]" for more information about a command.
 ```
