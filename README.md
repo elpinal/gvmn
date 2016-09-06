@@ -22,6 +22,7 @@ The commands are:
         list        list installed Go versions
         use         select a Go version to use
         remove      remove Go versions
+        run         execute the specified Go version
         version     print gvmn version
 
 Use "gvmn help [command]" for more information about a command.
@@ -61,6 +62,12 @@ Say goodbye to particular Go versions:
 
 ```bash
 $ gvmn remove go1.7
+```
+
+Execute another Go version.
+
+```bash
+$ gvmn run go1.5 get github.com/susp/gvmn/cmd/gvmn
 ```
 
 ## Install
