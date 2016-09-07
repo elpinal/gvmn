@@ -142,10 +142,10 @@ func Get(version string) error {
 // writeFile writes files.
 func writeFile(dest string, h *tar.Header, r *tar.Reader) error {
 	f, err := os.Create(dest)
-	defer f.Close()
 	if err != nil {
 		return errors.Wrap(err, "os.Create")
 	}
+	defer f.Close()
 	if err := f.Chmod(h.FileInfo().Mode()); err != nil {
 		return errors.Wrap(err, "Chmod")
 	}
