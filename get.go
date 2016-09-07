@@ -140,7 +140,7 @@ func Get(version string) error {
 }
 
 // writeFile writes files.
-func writeFile(dest string, mode os.FileMode, r io.Reader) error {
+func writeFile(dest string, r io.Reader, mode os.FileMode) error {
 	f, err := os.Create(dest)
 	if err != nil {
 		return errors.Wrap(err, "os.Create")
@@ -185,7 +185,7 @@ func unTarGz(src io.Reader, version string) error {
 				return err
 			}
 		case tar.TypeReg:
-			if err := writeFile(path, hdr.FileInfo().Mode(), rd); err != nil {
+			if err := writeFile(path, rd, hdr.FileInfo().Mode()); err != nil {
 				return err
 			}
 		default:
