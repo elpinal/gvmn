@@ -140,13 +140,13 @@ func Get(version string) error {
 }
 
 // writeFile writes files.
-func writeFile(dest string, h *tar.Header, r *tar.Reader) error {
+func writeFile(dest string, mode os.FileMode, r io.Reader) error {
 	f, err := os.Create(dest)
 	if err != nil {
 		return errors.Wrap(err, "os.Create")
 	}
 	defer f.Close()
-	if err := f.Chmod(h.FileInfo().Mode()); err != nil {
+	if err := f.Chmod(mode); err != nil {
 		return errors.Wrap(err, "Chmod")
 	}
 	if _, err := io.Copy(f, r); err != nil {
@@ -185,7 +185,7 @@ func unTarGz(src io.Reader, version string) error {
 				return err
 			}
 		case tar.TypeReg:
-			if err := writeFile(path, hdr, rd); err != nil {
+			if err := writeFile(path, hdr.FileInfo().Mode(), rd); err != nil {
 				return err
 			}
 		default:
