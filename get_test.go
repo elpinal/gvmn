@@ -89,3 +89,12 @@ func BenchmarkCheckout(b *testing.B) {
 		b.StartTimer()
 	}
 }
+
+func TestGetBinary(t *testing.T) {
+	if err := GetBinary("go1.7"); err != nil {
+		t.Fatalf("GetBinary: %v", err)
+	}
+	if err := Run("go1.7", "version"); err != nil {
+		t.Fatalf("go version: %v", err)
+	}
+}

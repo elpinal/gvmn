@@ -1,11 +1,17 @@
 package gvmn
 
 import (
+	"archive/tar"
 	"bytes"
+	"compress/gzip"
 	"fmt"
+	"io"
+	"io/ioutil"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 
 	"github.com/pkg/errors"
 )
@@ -130,6 +136,107 @@ func Get(version string) error {
 	if err := Install(version); err != nil {
 		return err
 	}
+	return nil
+}
+
+// writeFile writes files.
+func writeFile(dest string, h *tar.Header, r *tar.Reader) error {
+	f, err := os.Create(dest)
+	defer f.Close()
+	if err != nil {
+		return errors.Wrap(err, "os.Create")
+	}
+	if err := f.Chmod(h.FileInfo().Mode()); err != nil {
+		return errors.Wrap(err, "Chmod")
+	}
+	if _, err := io.Copy(f, r); err != nil {
+		return errors.Wrap(err, "io.Copy")
+	}
+	return nil
+}
+
+// unTarGz extract content from tar.gz.
+func unTarGz(src io.Reader, version string) error {
+	r, err := gzip.NewReader(src)
+	if err != nil {
+		return err
+	}
+	defer r.Close()
+	rd := tar.NewReader(r)
+
+	for {
+		hdr, err := rd.Next()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return err
+		}
+
+		// Trim prefix, "go".
+		if len(hdr.Name) < 2 {
+			return fmt.Errorf("failed to extract %v; too short name", hdr.Name)
+		}
+		path := filepath.Join(gvmnrootGo, version, hdr.Name[2:])
+
+		switch hdr.Typeflag {
+		case tar.TypeDir:
+			if err := os.MkdirAll(path, os.FileMode(hdr.Mode)); err != nil {
+				return err
+			}
+		case tar.TypeReg:
+			if err := writeFile(path, hdr, rd); err != nil {
+				return err
+			}
+		default:
+			return fmt.Errorf("cannot: %c, %s", hdr.Typeflag, path)
+		}
+	}
+
+	return nil
+}
+
+var script = bytes.TrimSpace([]byte(`
+#!/bin/bash
+
+path="$(dirname $0)"
+
+GOROOT="$path" "$path"/go-org "$@"
+`))
+
+// GetBinary is like Get but gets binaries.
+func GetBinary(version string) error {
+	goos := runtime.GOOS
+	goarch := runtime.GOARCH
+	suffix := "tar.gz"
+	if goos == "windows" {
+		suffix = "zip"
+	}
+	file := fmt.Sprintf("%s.%s-%s.%s", version, goos, goarch, suffix)
+	resp, err := http.Get("https://storage.googleapis.com/golang/" + file)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	switch goos {
+	case "windows":
+		// FIXME: unzip...
+		return fmt.Errorf("Windows is not supported yet")
+	default:
+		if err := unTarGz(resp.Body, version); err != nil {
+			return err
+		}
+	}
+
+	goBin := filepath.Join(gvmnrootGo, version, "bin", "go")
+	if err := os.Rename(goBin, goBin+"-org"); err != nil {
+		return err
+	}
+	if err := ioutil.WriteFile(goBin, script, 0777); err != nil {
+		return errors.Wrap(err, "write")
+	}
+
 	return nil
 }
 
