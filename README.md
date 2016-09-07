@@ -47,6 +47,12 @@ Get the latest tagged Go, such as go1.7 and go1.7rc6:
 $ gvmn get latest
 ```
 
+If you want to get Go without building (which takes a few minutes), get binaries:
+
+```bash
+$ gvmn get -b go1.7
+```
+
 ### List installed Go versions
 
 Know what Go versions is installed or downloaded:
