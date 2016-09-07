@@ -1,34 +1,39 @@
-# gvmn
+# Gvmn
 
 Go Version Manager Next
 
-## Description
+## Install
 
-gvmn is a tool for managing Go versions.
-
-## Usage
+To install, use `go get`:
 
 ```bash
-$ gvmn
-gvmn is a tool for managing Go versions.
+$ go get github.com/susp/gvmn/cmd/gvmn
+```
+
+## Command gvmn
+
+Gvmn is a tool for managing Go versions.
 
 Usage:
 
-        gvmn command [arguments]
+```bash
+gvmn command [arguments]
+```
 
 The commands are:
 
-        get         download and install Go
-        list        list installed Go versions
-        use         select a Go version to use
-        remove      remove Go versions
-        run         execute the specified Go version
-        version     print gvmn version
-
-Use "gvmn help [command]" for more information about a command.
+```bash
+get         download and install Go
+list        list installed Go versions
+use         select a Go version to use
+remove      remove Go versions
+run         execute the specified Go version
+version     print gvmn version
 ```
 
-### Example
+Use "gvmn help [command]" for more information about a command.
+
+### Download and install Go
 
 Get specific Go versions:
 
@@ -42,6 +47,8 @@ Get the latest tagged Go, such as go1.7 and go1.7rc6:
 $ gvmn get latest
 ```
 
+### List installed Go versions
+
 Know what Go versions is installed or downloaded:
 
 ```bash
@@ -52,11 +59,15 @@ $ gvmn list
   go1.7rc6
 ```
 
+### Select a Go version to use
+
 Select a Go version to use:
 
 ```bash
 $ gvmn use go1.6
 ```
+
+### Remove Go versions
 
 Say goodbye to particular Go versions:
 
@@ -64,18 +75,18 @@ Say goodbye to particular Go versions:
 $ gvmn remove go1.7
 ```
 
-Execute another Go version.
+### Execute the specified Go version
+
+Execute another Go version:
 
 ```bash
 $ gvmn run go1.5 get github.com/susp/gvmn/cmd/gvmn
 ```
 
-## Install
-
-To install, use `go get`:
+### Print gvmn version
 
 ```bash
-$ go get github.com/susp/gvmn/cmd/gvmn
+$ gvmn version
 ```
 
 ## Contribution
