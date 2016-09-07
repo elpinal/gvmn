@@ -86,8 +86,5 @@ func getBinary(versions []string) error {
 			return err
 		}
 	}
-	if err := gvmn.Use(versions[len(versions)-1:][0]); err != nil {
-		return err
-	}
-	return nil
+	return gvmn.Use(versions[len(versions)-1:][0])
 }
