@@ -204,7 +204,7 @@ path="$(dirname $0)"
 GOROOT="$path" "$path"/go-org "$@"
 `))
 
-// GetBinary is like Get but gets binaries.
+// GetBinary is like Get but gets binaries instead.
 func GetBinary(version string) error {
 	goos := runtime.GOOS
 	goarch := runtime.GOARCH
