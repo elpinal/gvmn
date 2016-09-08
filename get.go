@@ -206,6 +206,10 @@ GOROOT="$path" "$path"/go-org "$@"
 
 // GetBinary is like Get but gets binaries instead.
 func GetBinary(version string) error {
+	if exist(filepath.Join(gvmnrootGo, version, "bin", "go")) {
+		return nil
+	}
+
 	goos := runtime.GOOS
 	goarch := runtime.GOARCH
 	suffix := "tar.gz"
