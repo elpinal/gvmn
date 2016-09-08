@@ -13,7 +13,7 @@ type Info struct {
 	Installed bool
 }
 
-// List prints installed Go versions.
+// List returns information of installed Go versions.
 func List() []Info {
 	if !exist(gvmnrootGo) {
 		return nil
