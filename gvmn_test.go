@@ -75,21 +75,6 @@ func TestDownload(t *testing.T) {
 	}
 }
 
-func BenchmarkCheckout(b *testing.B) {
-	if err := download(); err != nil {
-		b.Fatalf("download() failed: %v", err)
-	}
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		if err := checkout("go1.7"); err != nil {
-			b.Fatalf(`checkout("go1.7") failed: %v`, err)
-		}
-		b.StopTimer()
-		mustRemoveAll(gvmnrootGo)
-		b.StartTimer()
-	}
-}
-
 func TestGetBinary(t *testing.T) {
 	if err := GetBinary("go1.7"); err != nil {
 		t.Fatalf("GetBinary: %v", err)
