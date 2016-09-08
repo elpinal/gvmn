@@ -7,7 +7,7 @@ import (
 )
 
 // Remove removes the specified Go versions.
-func Remove(versions []string) error {
+func Remove(versions ...string) error {
 	for _, version := range versions {
 		dir := filepath.Join(gvmnrootGo, version)
 		if !exist(dir) {

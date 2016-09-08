@@ -105,7 +105,7 @@ func TestList(t *testing.T) {
 }
 
 func TestRemove(t *testing.T) {
-	if err := Remove([]string{"go1.7"}); err != nil {
+	if err := Remove("go1.7"); err != nil {
 		t.Fatalf("Remove: %v", err)
 	}
 }
