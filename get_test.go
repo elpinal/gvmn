@@ -98,3 +98,29 @@ func TestGetBinary(t *testing.T) {
 		t.Fatalf("go version: %v", err)
 	}
 }
+
+func TestLatestTag(t *testing.T) {
+	if out, err := LatestTag(); err != nil {
+		t.Fatalf("LatestTag: %v", err)
+	} else if out != "go1.7" {
+		t.Fatalf("got %v, want go1.7", out)
+	}
+}
+
+func TestUse(t *testing.T) {
+	if err := Use("go1.7"); err != nil {
+		t.Fatalf("Use: %v", err)
+	}
+}
+
+func TestList(t *testing.T) {
+	if err := List(); err != nil {
+		t.Fatalf("List: %v", err)
+	}
+}
+
+func TestRemove(t *testing.T) {
+	if err := Remove([]string{"go1.7"}); err != nil {
+		t.Fatalf("Remove: %v", err)
+	}
+}
