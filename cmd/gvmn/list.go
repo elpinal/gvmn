@@ -15,13 +15,32 @@ var cmdList = &Command{
 	Short:     "list installed Go versions",
 	Long: `
 List lists installed Go versions.
-A Go version selected by gvmn use is marked.
+Go versions is divided into states.
 	`,
 }
 
 func init() {
 	// Set your flag here like below.
 	// cmdList.Flag.BoolVar(&flagA, "a", false, "")
+}
+
+func doOnce(f func()) func() {
+	var done bool
+	return func() {
+		if done {
+			return
+		}
+		f()
+		done = true
+	}
+}
+
+func genHeader(header string) func() {
+	return func() {
+		log.Print()
+		log.Print(header)
+		log.Print()
+	}
 }
 
 // runList executes list command and return exit code.
@@ -31,9 +50,38 @@ func runList(cmd *Command, args []string) int {
 		fmt.Fprintf(os.Stderr, "%s\n", strings.TrimSpace(cmd.Long))
 		return 2
 	}
-	if err := gvmn.List(); err != nil {
-		log.Print(err)
-		return 1
+
+	list := gvmn.List()
+	if list == nil {
+		return 0
 	}
+
+	for _, info := range list {
+		if info.Current {
+			log.Print("Current:")
+			log.Print()
+			log.Print("\t", info.Name)
+			break
+		}
+	}
+
+	ih := doOnce(genHeader("Installed:"))
+	for _, info := range list {
+		if !info.Current && info.Installed {
+			ih()
+			log.Print("\t", info.Name)
+		}
+	}
+
+	dh := doOnce(genHeader("Just downloaded; not installed:"))
+	for _, info := range list {
+		if !info.Current && !info.Installed {
+			dh()
+			log.Print("\t", info.Name)
+		}
+	}
+
+	log.Print()
+
 	return 0
 }
