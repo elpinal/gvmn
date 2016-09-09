@@ -45,7 +45,7 @@ func runGet(cmd *Command, args []string) int {
 		return 0
 	}
 
-	for _, version := range args {
+	for i, version := range args {
 		if version == "latest" {
 			latest, err := gvmn.LatestTag()
 			if err != nil {
@@ -53,6 +53,7 @@ func runGet(cmd *Command, args []string) int {
 				return 1
 			}
 			version = latest
+			args[i] = latest
 		}
 
 		if err := gvmn.Download(version); err != nil {
