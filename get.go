@@ -34,11 +34,18 @@ func (e *doubleError) Error() string {
 	return fmt.Sprintf("%v\n%v", e.a, e.b)
 }
 
-// build builds the specified Go version.
+// build builds the specified Go version. It accept GOROOT_BOOTSTRAP
+// if it is set. Otherwise, it uses GOROOT as GOROOT_BOOTSTRAP if it is set.
+// If neither GOROOT_BOOTSTRAP nor GOROOT is set, the result of the execution
+// of `go env GOROOT`.
 func build(version string) *doubleError {
-	var env []string
-	if goroot, err := exec.Command("go", "env", "GOROOT").Output(); err == nil {
-		env = append(os.Environ(), "GOROOT_BOOTSTRAP="+string(bytes.TrimSuffix(goroot, []byte("\n"))))
+	env := os.Environ()
+	if gorootBootstrap := os.Getenv("GOROOT_BOOTSTRAP"); gorootBootstrap != "" {
+		// nothing to do
+	} else if goroot := os.Getenv("GOROOT"); goroot != "" {
+		env = append(env, "GOROOT_BOOTSTRAP="+goroot)
+	} else if goroot, err := exec.Command("go", "env", "GOROOT").Output(); err == nil {
+		env = append(env, "GOROOT_BOOTSTRAP="+string(bytes.TrimSuffix(goroot, []byte("\n"))))
 	}
 	cmd := exec.Command("./make.bash")
 	cmd.Dir = filepath.Join(gvmnrootGo, version, "src")
