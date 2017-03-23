@@ -8,7 +8,7 @@ import (
 
 var cmdGet = &Command{
 	Run:       runGet,
-	UsageLine: "get [-b] [-d] versions...",
+	UsageLine: "get [-b] [-d] [-u] versions...",
 	Short:     "download and install Go",
 	Long: `
 Get downloads the specified Go versions, and then installs them.
@@ -17,6 +17,10 @@ The -b flag instructs get to download binaries of the Go versions.
 
 The -d flag instructs get to stop after downloading the Go versions; that is,
 it instructs get not to install the Go versions.
+
+The -u flag instructs get to use the network to update the Go version.
+By default, get uses the network to check out missing Go versions but does not use
+it to look for updates to existing Go versions.
 `,
 }
 
