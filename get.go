@@ -34,10 +34,10 @@ func (e *doubleError) Error() string {
 	return fmt.Sprintf("%v\n%v", e.a, e.b)
 }
 
-// build builds the specified Go version. It accept GOROOT_BOOTSTRAP
-// if it is set. Otherwise, it uses GOROOT as GOROOT_BOOTSTRAP if it is set.
-// If neither GOROOT_BOOTSTRAP nor GOROOT is set, the result of the execution
-// of `go env GOROOT`.
+// build builds the specified Go version. It accept GOROOT_BOOTSTRAP if it is
+// set. Otherwise, it uses GOROOT as GOROOT_BOOTSTRAP if it is set.  If neither
+// GOROOT_BOOTSTRAP nor GOROOT is set, the result of the execution of `go env
+// GOROOT`.
 func build(version string) *doubleError {
 	env := os.Environ()
 	if gorootBootstrap := os.Getenv("GOROOT_BOOTSTRAP"); gorootBootstrap != "" {
