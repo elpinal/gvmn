@@ -56,7 +56,7 @@ func runGet(cmd *Command, args []string) int {
 			args[i] = latest
 		}
 
-		if err := gvmn.Download(version); err != nil {
+		if err := gvmn.Download(version, false); err != nil {
 			log.Print(err)
 			return 1
 		}

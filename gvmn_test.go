@@ -70,8 +70,8 @@ func TestDownload(t *testing.T) {
 	if !testing.Short() {
 		t.Skip("skipping in non-short mode")
 	}
-	if err := Download("go1.7"); err != nil {
-		t.Fatalf(`Download("go1.7") failed: %v`, err)
+	if err := Download("go1.7", false); err != nil {
+		t.Fatalf(`Download("go1.7", false) failed: %v`, err)
 	}
 }
 

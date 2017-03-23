@@ -122,8 +122,8 @@ func download() error {
 }
 
 // Download fetches the Go repository and check out version.
-func Download(version string) error {
-	if exist(filepath.Join(gvmnrootGo, version)) {
+func Download(version string, update bool) error {
+	if !update && exist(filepath.Join(gvmnrootGo, version)) {
 		return nil
 	}
 	if err := download(); err != nil {
@@ -137,7 +137,7 @@ func Download(version string) error {
 
 // Get downloads and installs Go.
 func Get(version string) error {
-	if err := Download(version); err != nil {
+	if err := Download(version, false); err != nil {
 		return err
 	}
 	if err := Install(version); err != nil {
