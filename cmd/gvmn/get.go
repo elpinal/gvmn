@@ -23,11 +23,13 @@ it instructs get not to install the Go versions.
 var (
 	getB bool
 	getD bool
+	getU bool
 )
 
 func init() {
 	cmdGet.Flag.BoolVar(&getB, "b", false, "")
 	cmdGet.Flag.BoolVar(&getD, "d", false, "")
+	cmdGet.Flag.BoolVar(&getU, "u", false, "")
 }
 
 // runGet executes get command and return exit code.
@@ -56,7 +58,7 @@ func runGet(cmd *Command, args []string) int {
 			args[i] = latest
 		}
 
-		if err := gvmn.Download(version, false); err != nil {
+		if err := gvmn.Download(version, getU); err != nil {
 			log.Printf("downloading (%s): %v", version, err)
 			return 1
 		}
