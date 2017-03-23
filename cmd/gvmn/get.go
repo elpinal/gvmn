@@ -39,7 +39,7 @@ func runGet(cmd *Command, args []string) int {
 
 	if getB {
 		if err := getBinary(args); err != nil {
-			log.Print(err)
+			log.Printf("getting binary: %v", err)
 			return 1
 		}
 		return 0
@@ -49,7 +49,7 @@ func runGet(cmd *Command, args []string) int {
 		if version == "latest" {
 			latest, err := gvmn.LatestTag()
 			if err != nil {
-				log.Print(err)
+				log.Printf("obtaining the latest tag: %v", err)
 				return 1
 			}
 			version = latest
@@ -57,7 +57,7 @@ func runGet(cmd *Command, args []string) int {
 		}
 
 		if err := gvmn.Download(version, false); err != nil {
-			log.Print(err)
+			log.Printf("downloading (%s): %v", version, err)
 			return 1
 		}
 	}
@@ -68,13 +68,13 @@ func runGet(cmd *Command, args []string) int {
 
 	for _, version := range args {
 		if err := gvmn.Install(version); err != nil {
-			log.Print(err)
+			log.Printf("installing (%s): %v", version, err)
 			return 1
 		}
 	}
 
 	if err := gvmn.Use(args[len(args)-1:][0]); err != nil {
-		log.Print(err)
+		log.Printf("defaulting to %s: %v", args[len(args)-1], err)
 		return 1
 	}
 

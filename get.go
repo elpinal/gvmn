@@ -75,7 +75,7 @@ func checkout(version string) *doubleError {
 	cmd := exec.Command("git", "clone", gvmnrootRepo, versionsDir)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
-		return &doubleError{errors.Wrap(err, "git clone failed"), fmt.Errorf("%s", out)}
+		return &doubleError{errors.Wrapf(err, "cloning (%s) from cached repository", version), fmt.Errorf("%s", out)}
 	}
 
 	cmd = exec.Command("git", "reset", "--hard", version)
@@ -83,7 +83,7 @@ func checkout(version string) *doubleError {
 	out, err = cmd.CombinedOutput()
 	if err != nil {
 		_ = os.RemoveAll(versionsDir)
-		return &doubleError{errors.Wrap(err, "git reset failed"), fmt.Errorf("%s", out)}
+		return &doubleError{errors.Wrapf(err, "checking out (%s)", version), fmt.Errorf("%s", out)}
 	}
 
 	return nil
@@ -94,7 +94,7 @@ func update() *doubleError {
 	cmd := exec.Command("git", "fetch")
 	cmd.Dir = gvmnrootRepo
 	if out, err := cmd.CombinedOutput(); err != nil {
-		return &doubleError{errors.Wrap(err, "failed to fetch"), fmt.Errorf("%s", out)}
+		return &doubleError{errors.Wrap(err, "fetching updates from remote repository"), fmt.Errorf("%s", out)}
 	}
 	return nil
 }
@@ -103,7 +103,7 @@ func update() *doubleError {
 func mirror() *doubleError {
 	out, err := exec.Command("git", "clone", "--mirror", RepoURL, gvmnrootRepo).CombinedOutput()
 	if err != nil {
-		return &doubleError{errors.Wrap(err, "cloning repository failed"), fmt.Errorf("%s", out)}
+		return &doubleError{errors.Wrap(err, "cloning from remote repository"), fmt.Errorf("%s", out)}
 	}
 	return nil
 }
