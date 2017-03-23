@@ -73,6 +73,9 @@ func TestDownload(t *testing.T) {
 	if err := Download("go1.7", false); err != nil {
 		t.Fatalf(`Download("go1.7", false) failed: %v`, err)
 	}
+	if err := Download("go1.7", true); err != nil {
+		t.Fatalf(`Download("go1.7", true) failed: %v`, err)
+	}
 }
 
 func TestGetBinary(t *testing.T) {
