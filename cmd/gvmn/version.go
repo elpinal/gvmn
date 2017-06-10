@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/susp/gvmn"
+	"github.com/elpinal/gvmn"
 )
 
 var cmdVersion = &Command{

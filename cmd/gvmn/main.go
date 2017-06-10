@@ -12,7 +12,7 @@ import (
 	"text/template"
 
 	"github.com/mitchellh/go-homedir"
-	"github.com/susp/gvmn"
+	"github.com/elpinal/gvmn"
 )
 
 // A Command is an implementation of a gvmn command

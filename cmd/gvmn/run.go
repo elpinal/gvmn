@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/susp/gvmn"
+	"github.com/elpinal/gvmn"
 )
 
 var cmdRun = &Command{

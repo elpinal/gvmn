@@ -7,7 +7,7 @@ Go Version Manager Next
 To install, use `go get`:
 
 ```bash
-$ go get github.com/susp/gvmn/cmd/gvmn
+$ go get github.com/elpinal/gvmn/cmd/gvmn
 ```
 
 ## Command gvmn
@@ -86,7 +86,7 @@ $ gvmn remove go1.7
 Execute another Go version:
 
 ```bash
-$ gvmn run go1.5 get github.com/susp/gvmn/cmd/gvmn
+$ gvmn run go1.5 get github.com/elpinal/gvmn/cmd/gvmn
 ```
 
 ### Print gvmn version
@@ -97,7 +97,7 @@ $ gvmn version
 
 ## Contribution
 
-1. Fork ([https://github.com/susp/gvmn/fork](https://github.com/susp/gvmn/fork))
+1. Fork ([https://github.com/elpinal/gvmn/fork](https://github.com/elpinal/gvmn/fork))
 1. Create a feature branch
 1. Commit your changes
 1. Rebase your local changes against the master branch
@@ -107,4 +107,4 @@ $ gvmn version
 
 ## Author
 
-[susp](https://github.com/susp)
+[elpinal](https://github.com/elpinal)

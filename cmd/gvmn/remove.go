@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/susp/gvmn"
+	"github.com/elpinal/gvmn"
 )
 
 var cmdRemove = &Command{
