@@ -1,7 +1,9 @@
 package main
 
 import (
-	"log"
+	"errors"
+	"fmt"
+	"os"
 
 	"github.com/elpinal/gvmn"
 )
@@ -40,49 +42,53 @@ func init() {
 }
 
 // runGet executes get command and return exit code.
-func runGet(cmd *Command, args []string) int {
-	if len(args) == 0 {
-		log.Print("gvmn get: no go versions specified")
+func runGet(_ *Command, args []string) int {
+	err := getMain(args)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
 		return 1
+	}
+	return 0
+}
+
+func getMain(args []string) error {
+	if len(args) == 0 {
+		return errors.New("gvmn get: no go versions specified")
 	}
 
 	if getB {
 		if err := getBinary(args); err != nil {
-			log.Printf("getting binary: %v", err)
-			return 1
+			return fmt.Errorf("getting binary: %v", err)
 		}
-		return 0
+		return nil
 	}
 
 	for i, version := range args {
 		if version == "latest" {
 			latest, err := gvmn.LatestTag()
 			if err != nil {
-				log.Printf("obtaining the latest tag: %v", err)
-				return 1
+				return fmt.Errorf("obtaining the latest tag: %v", err)
 			}
 			version = latest
 			args[i] = latest
 		}
 
 		if err := gvmn.Download(version, getU); err != nil {
-			log.Printf("downloading (%s): %v", version, err)
-			return 1
+			return fmt.Errorf("downloading (%s): %v", version, err)
 		}
 	}
 
 	if getD {
-		return 0
+		return nil
 	}
 
 	for _, version := range args {
 		if err := gvmn.Install(version); err != nil {
-			log.Printf("installing (%s): %v", version, err)
-			return 1
+			return fmt.Errorf("installing (%s): %v", version, err)
 		}
 	}
 
-	return 0
+	return nil
 }
 
 func getBinary(versions []string) error {
