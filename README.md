@@ -65,10 +65,16 @@ Know what Go versions is installed or downloaded:
 
 ```bash
 $ gvmn list
-  go1.6
-* go1.7
-  go1.7beta2
-  go1.7rc6
+Current:
+
+        go1.7
+
+Installed:
+
+        go1.6
+        go1.7beta2
+        go1.7rc6
+
 ```
 
 ### Select a Go version to use
