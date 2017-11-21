@@ -16,13 +16,13 @@ Gvmn is a tool for managing Go versions.
 
 Usage:
 
-```bash
+```
 gvmn command [arguments]
 ```
 
 The commands are:
 
-```bash
+```
 get         download and install Go
 list        list installed Go versions
 use         select a Go version to use
