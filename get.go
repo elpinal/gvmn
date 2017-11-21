@@ -8,8 +8,10 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"os"
 	"os/exec"
+	"path"
 	"path/filepath"
 	"runtime"
 
@@ -226,7 +228,12 @@ func GetBinary(version string) error {
 		suffix = "zip"
 	}
 	file := fmt.Sprintf("%s.%s-%s.%s", version, goos, goarch, suffix)
-	resp, err := http.Get("https://storage.googleapis.com/golang/" + file)
+	u := url.URL{
+		Scheme: "https",
+		Host:   "storage.googleapis.com",
+		Path:   path.Join("golang", url.PathEscape(file)),
+	}
+	resp, err := http.Get(u.String())
 	if err != nil {
 		return err
 	}
