@@ -16,7 +16,7 @@ var cmdGet = &Command{
 Get downloads the specified Go versions, and then installs them.
 
 The versions are exepected as Git's references on the repository of Go.
-A version named "latest" is interpreted as the latest tag on the repository.
+A version named "stable" is interpreted as the latest tag on the repository.
 
 The -b flag instructs get to download binaries of the Go versions.
 
@@ -41,7 +41,7 @@ func init() {
 	cmdGet.Flag.BoolVar(&getU, "u", false, "")
 }
 
-// runGet executes get command and return exit code.
+// runGet executes get command and returns exit code.
 func runGet(_ *Command, args []string) int {
 	err := getMain(args)
 	if err != nil {
@@ -64,13 +64,13 @@ func getMain(args []string) error {
 	}
 
 	for i, version := range args {
-		if version == "latest" {
-			latest, err := gvmn.LatestTag()
+		if version == "stable" {
+			stable, err := gvmn.LatestTag()
 			if err != nil {
 				return fmt.Errorf("obtaining the latest tag: %v", err)
 			}
-			version = latest
-			args[i] = latest
+			version = stable
+			args[i] = stable
 		}
 
 		if err := gvmn.Download(version, getU); err != nil {
