@@ -64,13 +64,21 @@ func getMain(args []string) error {
 	}
 
 	for i, version := range args {
-		if version == "stable" {
+		switch version {
+		case "stable":
 			stable, err := gvmn.LatestTag()
 			if err != nil {
 				return fmt.Errorf("obtaining the latest tag: %v", err)
 			}
 			version = stable
 			args[i] = stable
+		case "tip":
+			tip, err := gvmn.Tip()
+			if err != nil {
+				return fmt.Errorf("obtaining the reference of tip: %v", err)
+			}
+			version = tip
+			args[i] = tip
 		}
 
 		if err := gvmn.Download(version, getU); err != nil {

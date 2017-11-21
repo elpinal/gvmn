@@ -283,8 +283,24 @@ func latestTag() (string, error) {
 // LatestTag downloads the updated Go repository and reports
 // the latest tag of it.
 func LatestTag() (string, error) {
+	// TODO: Should download here?
 	if err := download(); err != nil {
 		return "", err
 	}
 	return latestTag()
+}
+
+// Tip reports the SHA-1 hash of HEAD of the Go repository.
+func Tip() (string, error) {
+	if err := download(); err != nil {
+		return "", err
+	}
+
+	cmd := exec.Command("git", "rev-parse", "HEAD")
+	cmd.Dir = gvmnrootRepo
+	out, err := cmd.Output()
+	if err != nil {
+		return "", errors.Wrap(err, "git rev-parse failed")
+	}
+	return string(bytes.TrimSuffix(out, []byte("\n"))), nil
 }
