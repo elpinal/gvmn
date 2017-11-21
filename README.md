@@ -44,7 +44,7 @@ $ gvmn get go1.7
 Get the latest tagged Go, such as go1.7 and go1.7rc6:
 
 ```bash
-$ gvmn get latest
+$ gvmn get stable
 ```
 
 If you want to get Go without building (which takes a few minutes), get binaries:
