@@ -13,6 +13,9 @@ var cmdGet = &Command{
 	Long: `
 Get downloads the specified Go versions, and then installs them.
 
+The versions are exepected as Git's references on the repository of Go.
+A version named "latest" is interpreted as the latest tag on the repository.
+
 The -b flag instructs get to download binaries of the Go versions.
 
 The -d flag instructs get to stop after downloading the Go versions; that is,
