@@ -12,6 +12,7 @@ import (
 	"text/template"
 
 	"github.com/mitchellh/go-homedir"
+
 	"github.com/elpinal/gvmn"
 )
 
