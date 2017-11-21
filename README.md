@@ -53,6 +53,12 @@ If you want to get Go without building (which takes a few minutes), get binaries
 $ gvmn get -b go1.7
 ```
 
+#### Install the latest developing version
+
+```bash
+$ gvmn get tip
+```
+
 ### List installed Go versions
 
 Know what Go versions is installed or downloaded:
