@@ -124,6 +124,9 @@ func download() error {
 }
 
 // Download fetches the Go repository and check out version.
+// It does nothing if update is false and the version is already checked out.
+// If update is set to true, it updates the mirror repository and re-checkout
+// the version.
 func Download(version string, update bool) error {
 	if exist(filepath.Join(gvmnrootGo, version)) {
 		if !update {
