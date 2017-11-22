@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"strings"
 
@@ -35,14 +34,6 @@ func doOnce(f func()) func() {
 	}
 }
 
-func genHeader(header string) func() {
-	return func() {
-		log.Print()
-		log.Print(header)
-		log.Print()
-	}
-}
-
 // runList executes list command and return exit code.
 func runList(cmd *Command, args []string) int {
 	if len(args) != 0 {
@@ -50,10 +41,39 @@ func runList(cmd *Command, args []string) int {
 		fmt.Fprintf(os.Stderr, "%s\n", strings.TrimSpace(cmd.Long))
 		return 2
 	}
+	l := lister{
+		out: os.Stdout,
+		err: os.Stderr,
+	}
+	return l.listMain()
+}
 
+type stringWriter interface {
+	Write([]byte) (int, error)
+	WriteString(string) (int, error)
+}
+
+type lister struct {
+	out stringWriter
+	err stringWriter
+}
+
+func newline(w stringWriter) {
+	w.Write([]byte{'\n'})
+}
+
+func (l *lister) genHeader(header string) func() {
+	return func() {
+		newline(l.out)
+		l.out.WriteString(header)
+		newline(l.out)
+	}
+}
+
+func (l *lister) listMain() int {
 	list, err := gvmn.List()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(l.err, err)
 		return 1
 	}
 	if list == nil {
@@ -62,30 +82,30 @@ func runList(cmd *Command, args []string) int {
 
 	for _, info := range list {
 		if info.Current {
-			log.Print("Current:")
-			log.Print()
-			log.Print("\t", info.Name)
+			l.out.WriteString("Current:")
+			newline(l.out)
+			fmt.Fprint(l.out, "\t", info.Name)
 			break
 		}
 	}
 
-	ih := doOnce(genHeader("Installed:"))
+	ih := doOnce(l.genHeader("Installed:"))
 	for _, info := range list {
 		if info.Installed {
 			ih()
-			log.Print("\t", info.Name)
+			fmt.Fprint(l.out, "\t", info.Name)
 		}
 	}
 
-	dh := doOnce(genHeader("Just downloaded; not installed:"))
+	dh := doOnce(l.genHeader("Just downloaded; not installed:"))
 	for _, info := range list {
 		if !info.Current && !info.Installed {
 			dh()
-			log.Print("\t", info.Name)
+			fmt.Fprint(l.out, "\t", info.Name)
 		}
 	}
 
-	log.Print()
+	newline(l.out)
 
 	return 0
 }
