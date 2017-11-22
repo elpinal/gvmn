@@ -67,7 +67,7 @@ func runList(cmd *Command, args []string) int {
 
 	ih := doOnce(genHeader("Installed:"))
 	for _, info := range list {
-		if !info.Current && info.Installed {
+		if info.Installed {
 			ih()
 			log.Print("\t", info.Name)
 		}
