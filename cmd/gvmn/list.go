@@ -70,6 +70,11 @@ func (l *lister) genHeader(header string) func() {
 	}
 }
 
+func (l *lister) printWithIndent(s string) {
+	l.out.Write([]byte{'\t'})
+	l.out.WriteString(s)
+}
+
 func (l *lister) listMain() int {
 	current, list, err := gvmn.List()
 	if err != nil {
@@ -83,14 +88,14 @@ func (l *lister) listMain() int {
 	if current != nil {
 		l.out.WriteString("Current:")
 		newline(l.out)
-		fmt.Fprint(l.out, "\t", current.Name)
+		l.printWithIndent(current.Name)
 	}
 
 	ih := doOnce(l.genHeader("Installed:"))
 	for _, info := range list {
 		if info.Installed {
 			ih()
-			fmt.Fprint(l.out, "\t", info.Name)
+			l.printWithIndent(info.Name)
 		}
 	}
 
@@ -98,7 +103,7 @@ func (l *lister) listMain() int {
 	for _, info := range list {
 		if !info.Installed {
 			dh()
-			fmt.Fprint(l.out, "\t", info.Name)
+			l.printWithIndent(info.Name)
 		}
 	}
 
