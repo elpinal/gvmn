@@ -71,7 +71,7 @@ func (l *lister) genHeader(header string) func() {
 }
 
 func (l *lister) listMain() int {
-	list, err := gvmn.List()
+	current, list, err := gvmn.List()
 	if err != nil {
 		fmt.Fprintln(l.err, err)
 		return 1
@@ -80,13 +80,10 @@ func (l *lister) listMain() int {
 		return 0
 	}
 
-	for _, info := range list {
-		if info.Current {
-			l.out.WriteString("Current:")
-			newline(l.out)
-			fmt.Fprint(l.out, "\t", info.Name)
-			break
-		}
+	if current != nil {
+		l.out.WriteString("Current:")
+		newline(l.out)
+		fmt.Fprint(l.out, "\t", current.Name)
 	}
 
 	ih := doOnce(l.genHeader("Installed:"))
