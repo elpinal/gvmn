@@ -40,7 +40,11 @@ func TestMain(m *testing.M) {
 		os.Exit(1)
 	}
 
-	os.Exit(m.Run())
+	code := m.Run()
+
+	_ = os.RemoveAll(dir)
+
+	os.Exit(code)
 }
 
 func TestList(t *testing.T) {
