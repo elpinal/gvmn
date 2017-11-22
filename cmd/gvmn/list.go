@@ -96,7 +96,7 @@ func (l *lister) listMain() int {
 
 	dh := doOnce(l.genHeader("Just downloaded; not installed:"))
 	for _, info := range list {
-		if !info.Current && !info.Installed {
+		if !info.Installed {
 			dh()
 			fmt.Fprint(l.out, "\t", info.Name)
 		}
