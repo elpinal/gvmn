@@ -18,13 +18,11 @@ func List() (current *Info, all []Info, err error) {
 	if !exist(gvmnrootGo) {
 		return
 	}
+
 	dir := filepath.Join(gvmnrootGo, "current")
 	currentPath, e := os.Readlink(dir)
-	if e != nil {
-		if !exist(dir) {
-			// Do nothing if no version is activated.
-			return
-		}
+	// Ignore, if any, an error if no version is activated.
+	if e != nil && exist(dir) {
 		err = e
 		return
 	}
@@ -34,6 +32,7 @@ func List() (current *Info, all []Info, err error) {
 		err = e
 		return
 	}
+
 	for _, version := range versions {
 		ver := version.Name()
 		if ver == "current" {
