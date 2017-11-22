@@ -55,7 +55,10 @@ func TestList(t *testing.T) {
 	if code != 0 {
 		t.Fatalf("listMain = %d; output is: %s", code, s)
 	}
-	if !strings.Contains(s, "Installed:") {
-		t.Fatalf("listMain: output does not contain %q in %q", "Installed:", s)
+	if want := "Installed:"; !strings.Contains(s, want) {
+		t.Fatalf("listMain: output does not contain %q in %q", want, s)
+	}
+	if want := "go1.7"; !strings.Contains(s, want) {
+		t.Fatalf("listMain: output does not contain %q in %q", want, s)
 	}
 }
