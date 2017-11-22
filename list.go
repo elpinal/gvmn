@@ -25,7 +25,7 @@ func List() ([]Info, error) {
 	currentVersion := filepath.Base(current)
 	versions, err := ioutil.ReadDir(gvmnrootGo)
 	if err != nil {
-		return nil, nil
+		return nil, err
 	}
 	var info []Info
 	for _, version := range versions {
