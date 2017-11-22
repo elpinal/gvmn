@@ -82,7 +82,12 @@ func TestGetBinary(t *testing.T) {
 	if err := GetBinary("go1.7"); err != nil {
 		t.Fatalf("GetBinary: %v", err)
 	}
-	if list := List(); len(list) == 0 {
+	if err := Use("go1.7"); err != nil {
+		t.Fatalf("Use: %v", err)
+	}
+	if _, list, err := List(); err != nil {
+		t.Fatalf("List: %v", err)
+	} else if len(list) == 0 {
 		t.Error("could not list Go versions")
 	} else if list[0].Name != "go1.7" {
 		t.Error("could not find go1.7")
