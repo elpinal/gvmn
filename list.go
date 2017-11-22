@@ -18,8 +18,13 @@ func List() (current *Info, all []Info, err error) {
 	if !exist(gvmnrootGo) {
 		return
 	}
-	currentPath, e := os.Readlink(filepath.Join(gvmnrootGo, "current"))
+	dir := filepath.Join(gvmnrootGo, "current")
+	currentPath, e := os.Readlink(dir)
 	if e != nil {
+		if !exist(dir) {
+			// Do nothing if no version is activated.
+			return
+		}
 		err = e
 		return
 	}
