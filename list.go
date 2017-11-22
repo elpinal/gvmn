@@ -14,15 +14,18 @@ type Info struct {
 }
 
 // List returns information of installed Go versions.
-func List() []Info {
+func List() ([]Info, error) {
 	if !exist(gvmnrootGo) {
-		return nil
+		return nil, nil
 	}
-	current, _ := os.Readlink(filepath.Join(gvmnrootGo, "current"))
+	current, err := os.Readlink(filepath.Join(gvmnrootGo, "current"))
+	if err != nil {
+		return nil, err
+	}
 	currentVersion := filepath.Base(current)
 	versions, err := ioutil.ReadDir(gvmnrootGo)
 	if err != nil {
-		return nil
+		return nil, nil
 	}
 	var info []Info
 	for _, version := range versions {
@@ -36,5 +39,5 @@ func List() []Info {
 		}
 		info = append(info, Info{Name: ver, Current: ver == currentVersion, Installed: installed})
 	}
-	return info
+	return info, nil
 }

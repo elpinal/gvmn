@@ -51,7 +51,11 @@ func runList(cmd *Command, args []string) int {
 		return 2
 	}
 
-	list := gvmn.List()
+	list, err := gvmn.List()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return 1
+	}
 	if list == nil {
 		return 0
 	}
