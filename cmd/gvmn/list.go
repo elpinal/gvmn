@@ -73,6 +73,7 @@ func (l *lister) genHeader(header string) func() {
 func (l *lister) printWithIndent(s string) {
 	l.out.Write([]byte{'\t'})
 	l.out.WriteString(s)
+	l.out.Write([]byte{'\n'})
 }
 
 func (l *lister) listMain() int {
