@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/elpinal/gvmn"
@@ -52,6 +53,14 @@ func runGet(_ *Command, args []string) int {
 	return 0
 }
 
+type logger struct {
+	w io.Writer
+}
+
+func (l *logger) Printf(format string, args ...interface{}) {
+	fmt.Fprintf(l.w, format, args...)
+}
+
 func getMain(args []string) error {
 	if len(args) == 0 {
 		return errors.New("gvmn get: no go versions specified")
@@ -64,6 +73,8 @@ func getMain(args []string) error {
 		return nil
 	}
 
+	l := &logger{w: os.Stdout}
+
 	for i, version := range args {
 		switch version {
 		case "stable":
@@ -73,6 +84,7 @@ func getMain(args []string) error {
 			}
 			version = stable
 			args[i] = stable
+			l.Printf("stable: %s\n", stable)
 		case "tip":
 			tip, err := gvmn.Tip()
 			if err != nil {
@@ -80,6 +92,7 @@ func getMain(args []string) error {
 			}
 			version = tip
 			args[i] = tip
+			l.Printf("tip: %s\n", tip)
 		}
 
 		if err := gvmn.Download(version, getU); err != nil {
